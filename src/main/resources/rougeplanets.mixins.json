@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "yaboichips.rouge_planets.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "rougeplanets.refmap.json",
+  "mixins": [
+    "ServerPlayerMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

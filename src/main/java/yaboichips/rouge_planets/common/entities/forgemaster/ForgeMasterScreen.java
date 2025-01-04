@@ -8,16 +8,21 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import yaboichips.rouge_planets.PlayerData;
+import yaboichips.rouge_planets.network.LevelUpItemPacket;
+import yaboichips.rouge_planets.network.RougePackets;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 
 public class ForgeMasterScreen extends AbstractContainerScreen<ForgeMasterMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(MODID, "textures/gui/forge_master.png");
+    private final ForgeMasterMenu menu;
 
     public ForgeMasterScreen(ForgeMasterMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         this.imageWidth = 176;
         this.imageHeight = 166;
+        this.menu = menu;
     }
 
     @Override
@@ -26,7 +31,7 @@ public class ForgeMasterScreen extends AbstractContainerScreen<ForgeMasterMenu> 
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
         this.addRenderableWidget(Button.builder(Component.literal("Level Up"), button -> {
-            menu.levelUpItem();
+            RougePackets.CHANNEL.sendToServer(new LevelUpItemPacket());
         }).bounds(x + 60, y + 60, 60, 20).build());
     }
 
@@ -34,7 +39,6 @@ public class ForgeMasterScreen extends AbstractContainerScreen<ForgeMasterMenu> 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         guiGraphics.blit(TEXTURE, (this.width - this.imageWidth) / 2, (this.height - this.imageHeight) / 2, 0, 0, this.imageWidth, this.imageHeight);
-
     }
 
 

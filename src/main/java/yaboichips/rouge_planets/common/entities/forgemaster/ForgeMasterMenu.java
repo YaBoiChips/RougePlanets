@@ -1,34 +1,36 @@
 package yaboichips.rouge_planets.common.entities.forgemaster;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
+import yaboichips.rouge_planets.common.items.LevelableItem;
 import yaboichips.rouge_planets.core.RPMenus;
 
 public class ForgeMasterMenu extends AbstractContainerMenu {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(1);
 
-    public ForgeMasterMenu(int id, Inventory playerInventory, Player player) {
+    private Container container;
+
+    public Player player;
+
+    private final SimpleContainer levelSlot = new SimpleContainer(1);
+
+    public ForgeMasterMenu(int id, Inventory playerInventory, Container container) {
         super(RPMenus.FORGE_MASTER_MENU.get(), id);
-//        for (int i = 0; i < 13; i++) {
-//            this.addSlot(new Slot(((PlayerData)player).getPlanetContainer(), i, 8 + (i % 9) * 18, 18 + (i / 9) * 18));
-//        }
+        checkContainerSize(container, 13);
+        checkContainerSize(levelSlot, 1);
+        this.container = container;
+        this.player = playerInventory.player;
 
-        // Add player inventory slots
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-            }
+        this.addSlot(new Slot(levelSlot, 0, 80, 26));
+
+        for (int i = 0; i < 13; i++) {
+            this.addSlot(new Slot(container, i, 8 + (i % 9) * 18, 84 + (i / 9) * 18));
         }
-
-        for (int k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
-        }
-
     }
 
     public ForgeMasterMenu(int id, Inventory playerInventory) {
@@ -36,7 +38,7 @@ public class ForgeMasterMenu extends AbstractContainerMenu {
     }
 
     public ForgeMasterMenu(int i, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
-        this(i, inventory);
+        this(i, inventory, new SimpleContainer(13));
     }
 
     @Override
@@ -46,13 +48,15 @@ public class ForgeMasterMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return true;
+        return container.stillValid(player);
     }
 
     public void levelUpItem() {
-//        ItemStack stack = itemHandler.getStackInSlot(0);
-//        if (!stack.isEmpty() && stack.getItem() instanceof LevelableItem) {
-//            ((LevelableItem) stack.getItem()).levelUp(stack);
-//        }
+        if (!player.level().isClientSide()) {
+            ItemStack stack = levelSlot.getItem(0);
+            if (!stack.isEmpty() && stack.getItem() instanceof LevelableItem) {
+                ((LevelableItem) stack.getItem()).levelUp(stack);
+            }
+        }
     }
 }

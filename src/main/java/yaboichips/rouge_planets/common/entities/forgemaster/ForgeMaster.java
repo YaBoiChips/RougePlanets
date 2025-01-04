@@ -2,18 +2,19 @@ package yaboichips.rouge_planets.common.entities.forgemaster;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import yaboichips.rouge_planets.PlayerData;
 import yaboichips.rouge_planets.common.entities.HumanMob;
+import yaboichips.rouge_planets.common.items.LevelableItem;
+import yaboichips.rouge_planets.core.RPItems;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 
@@ -28,11 +29,19 @@ public class ForgeMaster extends HumanMob {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (!player.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            player.openMenu(new SimpleMenuProvider(
-                    ForgeMasterMenu::new,
-                    Component.literal("Forge Master")));
-            return InteractionResult.SUCCESS;
+        if (!player.level().isClientSide) {
+            if (!((PlayerData)player).getIsInitiated()){
+                player.sendSystemMessage(Component.literal("Initiated"));
+                ItemStack stack = RPItems.TESTARMOR.get().getDefaultInstance();
+                ((PlayerData)player).setIsInitiated(true);
+                if (stack.getItem() instanceof LevelableItem item) {
+                    ((PlayerData) player).getPlanetContainer().addItem(RPItems.TESTARMOR.get().getDefaultInstance());
+                }
+            }
+            else if (hand == InteractionHand.MAIN_HAND) {
+                player.openMenu(new SimpleMenuProvider((id, playerInv, container) -> new ForgeMasterMenu(id, playerInv, ((PlayerData)player).getPlanetContainer()), Component.literal("Forge Master")));
+                return InteractionResult.SUCCESS;
+            }
         }
         return InteractionResult.PASS;
     }
@@ -42,4 +51,3 @@ public class ForgeMaster extends HumanMob {
         return ResourceLocation.fromNamespaceAndPath(MODID, "textures/entity/foreman.png");
     }
 }
-

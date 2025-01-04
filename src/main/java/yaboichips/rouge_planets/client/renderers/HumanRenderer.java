@@ -1,4 +1,4 @@
-package yaboichips.rouge_planets.client;
+package yaboichips.rouge_planets.client.renderers;
 
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;

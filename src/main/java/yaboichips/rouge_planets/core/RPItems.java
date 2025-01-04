@@ -6,7 +6,10 @@ import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import yaboichips.rouge_planets.common.items.CreditItem;
 import yaboichips.rouge_planets.common.items.ExplorerSuit;
+import yaboichips.rouge_planets.common.items.PlaneteerManuel;
+import yaboichips.rouge_planets.common.items.RopeBlockItem;
 
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
@@ -23,6 +26,12 @@ public class RPItems {
 
     public static final RegistryObject<Item> RUBY = ITEMS.register("ruby",() -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TESTARMOR = ITEMS.register("test",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.HELMET, new Item.Properties()));
+    public static final RegistryObject<Item> ROPE = ITEMS.register("rope",() -> new RopeBlockItem(RPBlocks.ROPE.get(), new Item.Properties()));
+
+
+    public static final RegistryObject<Item> CREDIT = ITEMS.register("credit", CreditItem::new);
+
+    public static final RegistryObject<Item> PLANETEER_MANUEL = ITEMS.register("planeteer_manuel", PlaneteerManuel::new);
 
 
 

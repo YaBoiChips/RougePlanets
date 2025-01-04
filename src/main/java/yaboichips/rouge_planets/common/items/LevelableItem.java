@@ -1,9 +1,9 @@
 package yaboichips.rouge_planets.common.items;
 
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public interface LevelableItem {
-
 
     default int getLevel(ItemStack stack) {
         if (stack.getItem() instanceof LevelableItem) {
@@ -21,4 +21,6 @@ public interface LevelableItem {
     default void levelUp(ItemStack stack) {
         setLevel(stack, getLevel(stack) + 1);
     }
+
+    int getLevelUpCost(ItemStack stack);
 }

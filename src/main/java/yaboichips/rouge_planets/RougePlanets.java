@@ -6,9 +6,6 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Mob;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
@@ -18,13 +15,15 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import yaboichips.rouge_planets.capabilties.armor.IPaddingCapability;
-import yaboichips.rouge_planets.client.HumanRenderer;
+import yaboichips.rouge_planets.client.renderers.HumanRenderer;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMaster;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
 import yaboichips.rouge_planets.core.RPEntities;
+import yaboichips.rouge_planets.network.RougePackets;
 
 import static yaboichips.rouge_planets.core.RPBlocks.BLOCKS;
 import static yaboichips.rouge_planets.core.RPEntities.ENTITIES;
@@ -54,6 +53,7 @@ public class RougePlanets {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::onClientSetup);
+        modEventBus.addListener(this::onCommonSetup);
         modEventBus.addListener(this::bakeLayers);
         modEventBus.addListener(this::registerCapabilities);
         modEventBus.addListener(this::entityAttributes);
@@ -61,6 +61,9 @@ public class RougePlanets {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
+    public void onCommonSetup(FMLCommonSetupEvent event) {
+        RougePackets.registerPackets();
+    }
     public void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.register(IPaddingCapability.class);
     }
@@ -69,7 +72,6 @@ public class RougePlanets {
         event.enqueueWork(() -> {
             MenuScreens.register(FORGE_MASTER_MENU.get(), ForgeMasterScreen::new);
             EntityRenderers.register(RPEntities.FORGE_MASTER.get(), HumanRenderer::new);
-
         });
     }
     public void bakeLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {

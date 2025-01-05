@@ -1,9 +1,10 @@
 package yaboichips.rouge_planets.capabilties;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraftforge.common.util.INBTSerializable;
 import yaboichips.rouge_planets.client.PlanetInventoryContainer;
 
-public interface PlayerData {
+public interface PlayerData extends INBTSerializable<CompoundTag> {
 
 
     PlanetInventoryContainer getPlanetContainer();
@@ -29,7 +30,5 @@ public interface PlayerData {
     void addO2(int o2);
     void subO2(int o2);
 
-    void deserializeNBT(CompoundTag tag);
-    void serializeNBT(CompoundTag tag);
 
 }

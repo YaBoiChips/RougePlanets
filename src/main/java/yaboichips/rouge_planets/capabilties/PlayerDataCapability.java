@@ -91,12 +91,13 @@ public class PlayerDataCapability implements PlayerData {
     public void subO2(int o2) {
         this.o2 -= o2;
     }
-    public void serializeNBT(CompoundTag tag) {
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
         tag.put("PlanetInventory", this.planetInventory.createTag());
         tag.putBoolean("Initiated", getIsInitiated());
         tag.putInt("Credits", getCredits());
         tag.putInt("O2", getCredits());
-
+        return tag;
     }
 
     public void deserializeNBT(CompoundTag tag) {

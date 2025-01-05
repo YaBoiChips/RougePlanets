@@ -33,9 +33,7 @@ public class CapabilityHandler {
 
                 @Override
                 public CompoundTag serializeNBT() {
-                    CompoundTag tag = new CompoundTag();
-                    instance.serializeNBT(tag);
-                    return tag;
+                    return instance.serializeNBT();
                 }
 
                 @Override

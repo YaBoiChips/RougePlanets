@@ -126,13 +126,11 @@ public class RougePlanets {
         syncedTime = time;
     }
 
-    public static void syncData(ServerPlayer player) {
-        player.getCapability(PLAYER_DATA).ifPresent(data -> {
-            CompoundTag tag = new CompoundTag();
-            data.serializeNBT(tag);
-            CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncPlayerDataPacket(tag));
-        });
-    }
+//    public static void syncData(ServerPlayer player) {
+//        player.getCapability(PLAYER_DATA).ifPresent(data -> {
+//            CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncPlayerDataPacket(data.serializeNBT()));
+//        });
+//    }
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
@@ -155,9 +153,9 @@ public class RougePlanets {
     @SubscribeEvent
     public void onPlayerSave(PlayerEvent.SaveToFile event) {
         System.out.println("SAVED");
-        if (event.getEntity() instanceof ServerPlayer player){
-            syncData(player);
-        }
+//        if (event.getEntity() instanceof ServerPlayer player){
+//            syncData(player);
+//        }
     }
 
     @SubscribeEvent

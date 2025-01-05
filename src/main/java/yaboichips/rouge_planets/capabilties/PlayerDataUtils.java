@@ -64,6 +64,6 @@ public class PlayerDataUtils {
     }
 
     public static PlanetInventoryContainer getPlanetContainer(ServerPlayer player) {
-        return player.getCapability(RougeCapabilities.PLAYER_DATA).map(PlayerData::getPlanetContainer).orElse(new PlanetInventoryContainer());
+        return player.getCapability(RougeCapabilities.PLAYER_DATA).map(PlayerData::getPlanetContainer).orElse(null);
     }
 }

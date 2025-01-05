@@ -2,18 +2,15 @@ package yaboichips.rouge_planets.capabilties.handlers;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import yaboichips.rouge_planets.capabilties.PlayerData;
 import yaboichips.rouge_planets.capabilties.PlayerDataCapability;
-import yaboichips.rouge_planets.capabilties.PlayerDataUtils;
 import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 import yaboichips.rouge_planets.client.PlanetInventoryContainer;
 

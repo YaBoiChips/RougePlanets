@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import yaboichips.rouge_planets.capabilties.PlayerDataUtils;
+import yaboichips.rouge_planets.client.PlanetInventoryContainer;
 import yaboichips.rouge_planets.common.entities.HumanMob;
 import yaboichips.rouge_planets.common.items.LevelableItem;
 import yaboichips.rouge_planets.core.RPItems;
@@ -37,6 +38,7 @@ public class ForgeMaster extends HumanMob {
                 if (!PlayerDataUtils.getIsInitiated(player)) {
                     player.sendSystemMessage(Component.literal("Initiated"));
                     ItemStack stack = RPItems.TESTARMOR.get().getDefaultInstance();
+                    PlayerDataUtils.setPlanetContainer(player, new PlanetInventoryContainer());
                     PlayerDataUtils.setInitiated(player, true);
                     if (stack.getItem() instanceof LevelableItem item) {
                         PlayerDataUtils.getPlanetContainer(player).addItem(RPItems.TESTARMOR.get().getDefaultInstance());

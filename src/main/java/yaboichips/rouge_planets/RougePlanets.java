@@ -33,6 +33,7 @@ import yaboichips.rouge_planets.capabilties.PlayerData;
 import yaboichips.rouge_planets.capabilties.PlayerDataUtils;
 import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 import yaboichips.rouge_planets.capabilties.handlers.CapabilityHandler;
+import yaboichips.rouge_planets.client.PlanetInventoryContainer;
 import yaboichips.rouge_planets.client.renderers.HumanRenderer;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMaster;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
@@ -111,17 +112,11 @@ public class RougePlanets {
     }
 
     @SubscribeEvent
-    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         System.out.println("Joined");
-        event.getEntity().getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(original -> {
-            if (event.getEntity() instanceof ServerPlayer player) {
-                PlayerDataUtils.getPlanetContainer(player);
-            }
-        });
     }
-
     @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
+    public void onPlayerClone(PlayerEvent.Clone event) {
         System.out.println("Cloned");
         event.getOriginal().getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(original -> {
             event.getEntity().getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(clone -> {

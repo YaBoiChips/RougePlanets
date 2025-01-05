@@ -1,14 +1,11 @@
 package yaboichips.rouge_planets.common.entities.forgemaster;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import yaboichips.rouge_planets.PlayerData;
 import yaboichips.rouge_planets.network.LevelUpItemPacket;
 import yaboichips.rouge_planets.network.RougePackets;
 

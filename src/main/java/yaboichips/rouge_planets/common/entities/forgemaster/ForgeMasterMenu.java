@@ -2,6 +2,7 @@ package yaboichips.rouge_planets.common.entities.forgemaster;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -9,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import yaboichips.rouge_planets.PlayerData;
+import yaboichips.rouge_planets.capabilties.PlayerDataUtils;
 import yaboichips.rouge_planets.common.items.LevelableItem;
 import yaboichips.rouge_planets.core.RPMenus;
 
@@ -57,12 +58,12 @@ public class ForgeMasterMenu extends AbstractContainerMenu {
         if (!player.level().isClientSide()) {
             ItemStack stack = levelSlot.getItem(0);
             if (!stack.isEmpty() && stack.getItem() instanceof LevelableItem) {
-                if (((PlayerData)player).getCredits() >= stack.getTag().getInt("LevelCost")) {
+                if (PlayerDataUtils.getCredits((ServerPlayer) player) >= stack.getTag().getInt("LevelCost")) {
                     ((LevelableItem) stack.getItem()).levelUp(stack);
-                    ((PlayerData)player).subtractCredits(stack.getTag().getInt("LevelCost"));
+                    PlayerDataUtils.subCredits((ServerPlayer) player, stack.getTag().getInt("LevelCost"));
                     ((LevelableItem)stack.getItem()).setLevelUpCost(stack, 50 * ((LevelableItem)stack.getItem()).getLevel(stack));
                 }else{
-                    player.sendSystemMessage(Component.literal("You need "+ (stack.getTag().getInt("LevelCost") - ((PlayerData)player).getCredits() + " more Credits")));
+                    player.sendSystemMessage(Component.literal("You need "+ (stack.getTag().getInt("LevelCost") - PlayerDataUtils.getCredits((ServerPlayer) player) + " more Credits")));
                 }
             }
         }

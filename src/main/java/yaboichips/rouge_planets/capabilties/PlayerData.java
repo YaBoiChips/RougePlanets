@@ -1,4 +1,4 @@
-package yaboichips.rouge_planets;
+package yaboichips.rouge_planets.capabilties;
 
 import yaboichips.rouge_planets.client.PlanetInventoryContainer;
 
@@ -20,7 +20,7 @@ public interface PlayerData {
     int getCredits();
     void setCredits(int credits);
 
-    void addCoins(int coins);
+    void addCredits(int credits);
     void subtractCredits(int coins);
 
     int getO2();

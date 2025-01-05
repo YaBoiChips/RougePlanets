@@ -1,9 +1,8 @@
-package yaboichips.rouge_planets.capabilties.armor;
+package yaboichips.rouge_planets.capabilties;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.capabilities.Capability;
 
-public interface IPaddingCapability {
+public interface ArmorData {
     boolean isActivated();
 
     void setActivated(boolean activated);
@@ -12,7 +11,7 @@ public interface IPaddingCapability {
     void serializeNBT(CompoundTag tag);
     void deserializeNBT(CompoundTag tag);
 
-    class PaddingCapability implements IPaddingCapability {
+    class ArmorCapability implements ArmorData {
         private boolean activated = false;
 
         @Override

@@ -15,7 +15,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 import yaboichips.rouge_planets.capabilties.RougeCapabilities;
-import yaboichips.rouge_planets.capabilties.armor.IPaddingCapability;
+import yaboichips.rouge_planets.capabilties.ArmorData;
 
 import java.util.List;
 
@@ -78,8 +78,8 @@ public class ExplorerSuit extends ArmorItem implements LevelableItem {
 
 
     public static class ArmorCapabilityProvider implements ICapabilityProvider {
-        private final IPaddingCapability.PaddingCapability padding = new IPaddingCapability.PaddingCapability();
-        private final LazyOptional<IPaddingCapability.PaddingCapability> lazyCapability = LazyOptional.of(() -> padding);
+        private final ArmorData.ArmorCapability padding = new ArmorData.ArmorCapability();
+        private final LazyOptional<ArmorData.ArmorCapability> lazyCapability = LazyOptional.of(() -> padding);
 
         @Override
         public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {

@@ -17,6 +17,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -27,7 +28,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkDirection;
 import org.slf4j.Logger;
-import yaboichips.rouge_planets.capabilties.armor.IPaddingCapability;
+import yaboichips.rouge_planets.capabilties.ArmorData;
+import yaboichips.rouge_planets.capabilties.PlayerData;
+import yaboichips.rouge_planets.capabilties.PlayerDataUtils;
+import yaboichips.rouge_planets.capabilties.RougeCapabilities;
+import yaboichips.rouge_planets.capabilties.handlers.CapabilityHandler;
 import yaboichips.rouge_planets.client.renderers.HumanRenderer;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMaster;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
@@ -44,6 +49,7 @@ import static yaboichips.rouge_planets.core.RPMenus.MENUS;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(RougePlanets.MODID)
+@Mod.EventBusSubscriber(modid = "yourmodid")
 public class RougePlanets {
 
     // Define mod id in a common place for everything to reference
@@ -64,6 +70,8 @@ public class RougePlanets {
         CREATIVE_MODE_TABS.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
+
 
         modEventBus.addListener(this::onClientSetup);
         modEventBus.addListener(this::onCommonSetup);
@@ -77,8 +85,10 @@ public class RougePlanets {
     public void onCommonSetup(FMLCommonSetupEvent event) {
         RougePackets.registerPackets();
     }
+
     public void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.register(IPaddingCapability.class);
+        event.register(ArmorData.class);
+        event.register(PlayerData.class);
     }
 
     private void onClientSetup(final FMLClientSetupEvent event) {
@@ -87,9 +97,11 @@ public class RougePlanets {
             EntityRenderers.register(RPEntities.FORGE_MASTER.get(), HumanRenderer::new);
         });
     }
+
     public void bakeLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(HumanRenderer.LAYER_LOCATION, () -> LayerDefinition.create(HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F), 64, 64));
     }
+
     public void entityAttributes(final EntityAttributeCreationEvent event) {
         event.put(RPEntities.FORGE_MASTER.get(), ForgeMaster.createAttributes().build());
     }
@@ -99,12 +111,34 @@ public class RougePlanets {
     }
 
     @SubscribeEvent
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        System.out.println("Joined");
+        event.getEntity().getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(original -> {
+            if (event.getEntity() instanceof ServerPlayer player) {
+                PlayerDataUtils.getPlanetContainer(player);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        System.out.println("Cloned");
+        event.getOriginal().getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(original -> {
+            event.getEntity().getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(clone -> {
+                clone.setIsInitiated(original.getIsInitiated());
+                clone.setPlanetContainer(original.getPlanetContainer());
+                clone.setCredits(original.getCredits());
+                clone.setO2(original.getO2());
+            });
+        });
+    }
+
+    @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side.isClient()) return;
-
         ServerPlayer player = (ServerPlayer) event.player;
-        RougePackets.CHANNEL.sendTo(new SendPlayerTimePacket(((PlayerData)player).getO2()),player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
-        if (((PlayerData)player).getO2() > 300){
+        RougePackets.CHANNEL.sendTo(new SendPlayerTimePacket(PlayerDataUtils.getO2(player)), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+        if (PlayerDataUtils.getO2(player) > 300) {
             player.kill();
         }
     }

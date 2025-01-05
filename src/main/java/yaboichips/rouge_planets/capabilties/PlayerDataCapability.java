@@ -1,15 +1,17 @@
 package yaboichips.rouge_planets.capabilties;
 
-import org.spongepowered.asm.mixin.Unique;
+import net.minecraft.nbt.CompoundTag;
 import yaboichips.rouge_planets.client.PlanetInventoryContainer;
 
 public class PlayerDataCapability implements PlayerData {
     public boolean isInitiated;
     public int credits;
     public int o2;
-
-    @Unique
     public PlanetInventoryContainer planetInventory;
+
+    public PlayerDataCapability() {
+        this.planetInventory = new PlanetInventoryContainer();
+    }
 
     @Override
     public PlanetInventoryContainer getPlanetContainer() {
@@ -89,34 +91,26 @@ public class PlayerDataCapability implements PlayerData {
     public void subO2(int o2) {
         this.o2 -= o2;
     }
+    public void serializeNBT(CompoundTag tag) {
+        tag.put("PlanetInventory", this.planetInventory.createTag());
+        tag.putBoolean("Initiated", getIsInitiated());
+        tag.putInt("Credits", getCredits());
+        tag.putInt("O2", getCredits());
 
-//    @Inject(method = "<init>", at = @At(value = "TAIL"))
-//    public void addStuffToPlayer(MinecraftServer p_254143_, ServerLevel p_254435_, GameProfile p_253651_, CallbackInfo ci) {
-//        setPlanetContainer(new PlanetInventoryContainer());
-//    }
-//
-//    @Inject(method = "addAdditionalSaveData", at = @At(value = "TAIL"))
-//    public void addAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
-//        tag.put("PlanetInventory", this.planetInventory.createTag());
-//        tag.putBoolean("Initiated", getIsInitiated());
-//        tag.putInt("Credits", getCredits());
-//        tag.putInt("O2", getCredits());
-//
-//    }
-//
-//    @Inject(method = "readAdditionalSaveData", at = @At(value = "TAIL"))
-//    public void readAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
-//        if (tag.contains("PlanetInventory")) {
-//            this.planetInventory.fromTag(tag.getList("PlanetInventory", 10));
-//        }
-//        if (tag.contains("Initiated")) {
-//            this.setIsInitiated(tag.getBoolean("Initiated"));
-//        }
-//        if (tag.contains("Credits")) {
-//            this.setCredits(tag.getInt("Credits"));
-//        }
-//        if (tag.contains("O2")) {
-//            this.setCredits(tag.getInt("O2"));
-//        }
-//    }
+    }
+
+    public void deserializeNBT(CompoundTag tag) {
+        if (tag.contains("PlanetInventory")) {
+            this.planetInventory.fromTag(tag.getList("PlanetInventory", 10));
+        }
+        if (tag.contains("Initiated")) {
+            this.setIsInitiated(tag.getBoolean("Initiated"));
+        }
+        if (tag.contains("Credits")) {
+            this.setCredits(tag.getInt("Credits"));
+        }
+        if (tag.contains("O2")) {
+            this.setCredits(tag.getInt("O2"));
+        }
+    }
 }

@@ -40,5 +40,12 @@ public class RougePackets {
                 SendPlayerTimePacket::decode,
                 SendPlayerTimePacket::handle
         );
+        CHANNEL.registerMessage(
+                packetId++,
+                SyncPlayerDataPacket.class,
+                SyncPlayerDataPacket::encode,
+                SyncPlayerDataPacket::decode,
+                SyncPlayerDataPacket::handle
+        );
     }
 }

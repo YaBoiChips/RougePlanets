@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import yaboichips.rouge_planets.RougePlanets;
 
 public class RopeBlockItem extends BlockItem {
     public RopeBlockItem(Block p_40565_, Properties p_40566_) {
@@ -35,29 +36,25 @@ public class RopeBlockItem extends BlockItem {
     }
 
     private void scheduleRopePlacement(ServerLevel serverLevel, BlockPos startPos, Player player) {
-        serverLevel.getServer().execute(() -> placeRopeRecursively(serverLevel, startPos, player));
+        RougePlanets.scheduleTask(10 + RougePlanets.currentTick, () -> {
+            placeRope(serverLevel, startPos, player);
+        });
     }
 
-    private void placeRopeRecursively(ServerLevel serverLevel, BlockPos currentPos, Player player) {
+    private void placeRope(ServerLevel serverLevel, BlockPos currentPos, Player player) {
         if (!serverLevel.isEmptyBlock(currentPos)) {
-            return; // Stop if the block below is not air
+            return;
         }
-
         ItemStack ropeStack = findRopeInInventory(player);
         if (ropeStack == ItemStack.EMPTY) {
-            return; // Stop if the player has no rope
+            return;
         }
-
-        // Place the rope block
         serverLevel.setBlock(currentPos, this.getBlock().defaultBlockState(), 3);
         serverLevel.playSound(null, currentPos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1, 1);
         if (!player.isCreative()) {
             ropeStack.shrink(1);
         }
-
-        // Schedule the next placement after 0.5 seconds
-        serverLevel.getServer().execute(() -> serverLevel.scheduleTick(currentPos.below(), this.getBlock(), 500));
-        placeRopeRecursively(serverLevel, currentPos.below(), player);
+        scheduleRopePlacement(serverLevel, currentPos.below(), player);
     }
 
     private ItemStack findRopeInInventory(Player player) {

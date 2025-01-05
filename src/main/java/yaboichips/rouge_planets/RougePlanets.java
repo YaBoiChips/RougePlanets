@@ -77,7 +77,6 @@ public class RougePlanets {
     public void bakeLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(HumanRenderer.LAYER_LOCATION, () -> LayerDefinition.create(HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F), 64, 64));
     }
-
     public void entityAttributes(final EntityAttributeCreationEvent event) {
         event.put(RPEntities.FORGE_MASTER.get(), ForgeMaster.createAttributes().build());
     }

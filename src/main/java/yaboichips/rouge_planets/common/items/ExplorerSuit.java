@@ -39,11 +39,6 @@ public class ExplorerSuit extends ArmorItem implements LevelableItem {
     }
 
     @Override
-    public int getLevelUpCost(ItemStack stack) {
-        return 50 * getLevel(stack);
-    }
-
-    @Override
     public int getDamage(ItemStack stack) {
         return super.getDamage(stack);
     }

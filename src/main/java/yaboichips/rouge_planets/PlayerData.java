@@ -23,4 +23,6 @@ public interface PlayerData {
     void addCoins(int coins);
     void subtractCredits(int coins);
 
+
+
 }

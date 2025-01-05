@@ -2,6 +2,7 @@ package yaboichips.rouge_planets.core;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -24,16 +25,26 @@ public class RPItems {
 //    public static final RegistryObject<Item> TELEPORTER_BLOCK_ITEM = ITEMS.register("teleporter_block", () -> new BlockItem(TELEPORTER_BLOCK.get(), new Item.Properties()));
 //    public static final RegistryObject<Item> CANON_CONTROLLER_BLOCK_ITEM = ITEMS.register("canon_controller", () -> new BlockItem(CANON_CONTROLLER.get(), new Item.Properties()));
 
+    //Raw Materials
     public static final RegistryObject<Item> RUBY = ITEMS.register("ruby",() -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SAPPHIRE = ITEMS.register("sapphire", ()-> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> TOPAZ = ITEMS.register("topaz", ()-> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> OPAL = ITEMS.register("opal", ()-> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> AMBER = ITEMS.register("amber", ()-> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ONYX = ITEMS.register("onyx", ()-> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> PYRITE = ITEMS.register("pyrite", ()-> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THALLIUM_INGOT = ITEMS.register("thallium_ingot", ()-> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THALLIUM_DUST = ITEMS.register("thallium_dust", ()-> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ENERGETIC_DUST = ITEMS.register("energetic_dust", ()-> new Item(new Item.Properties()));
+
+    //Tools & Armor
     public static final RegistryObject<Item> TESTARMOR = ITEMS.register("test",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.HELMET, new Item.Properties()));
+
+    // Utility Items
     public static final RegistryObject<Item> ROPE = ITEMS.register("rope",() -> new RopeBlockItem(RPBlocks.ROPE.get(), new Item.Properties()));
-
-
+    public static final RegistryObject<Item> JERKY = ITEMS.register("jerky", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(3).saturationMod(3).build())));
     public static final RegistryObject<Item> CREDIT = ITEMS.register("credit", CreditItem::new);
-
     public static final RegistryObject<Item> PLANETEER_MANUEL = ITEMS.register("planeteer_manuel", PlaneteerManuel::new);
-
-
 
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("rp_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)

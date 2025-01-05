@@ -22,5 +22,15 @@ public interface LevelableItem {
         setLevel(stack, getLevel(stack) + 1);
     }
 
-    int getLevelUpCost(ItemStack stack);
+    default int getLevelUpCost(ItemStack stack){
+        if (stack.getItem() instanceof LevelableItem) {
+            return stack.getOrCreateTag().getInt("LevelCost");
+        }
+        return 0;
+    }
+    default void setLevelUpCost(ItemStack stack, int i) {
+        if (stack.getItem() instanceof LevelableItem) {
+            stack.getOrCreateTag().putInt("LevelCost", i);
+        }
+    }
 }

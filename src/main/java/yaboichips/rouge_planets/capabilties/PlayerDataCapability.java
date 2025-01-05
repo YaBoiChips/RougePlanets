@@ -91,6 +91,8 @@ public class PlayerDataCapability implements PlayerData {
     public void subO2(int o2) {
         this.o2 -= o2;
     }
+
+    @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.put("PlanetInventory", this.planetInventory.createTag());
@@ -100,6 +102,7 @@ public class PlayerDataCapability implements PlayerData {
         return tag;
     }
 
+    @Override
     public void deserializeNBT(CompoundTag tag) {
         if (tag.contains("PlanetInventory")) {
             this.planetInventory.fromTag(tag.getList("PlanetInventory", 10));

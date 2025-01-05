@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,5 +30,15 @@ public class PlaneteerManuel extends Item {
             RougePackets.CHANNEL.send(PacketDistributor.PLAYER.with(() -> sPlayer), new OpenPlaneteerGUIPacket(credits));
         }
         return super.use(level, player, p_41434_);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
+        if (entity instanceof ServerPlayer player) {
+            if (player.getMainHandItem() == stack){
+                ((PlayerData)player).addO2(1);
+            }
+        }
+        super.inventoryTick(stack, level, entity, p_41407_, p_41408_);
     }
 }

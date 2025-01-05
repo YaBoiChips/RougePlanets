@@ -23,6 +23,8 @@ public interface PlayerData {
     void addCoins(int coins);
     void subtractCredits(int coins);
 
-
-
+    int getO2();
+    void setO2(int o2);
+    void addO2(int o2);
+    void subO2(int o2);
 }

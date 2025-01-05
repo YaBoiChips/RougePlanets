@@ -33,5 +33,12 @@ public class RougePackets {
                 OpenPlaneteerGUIPacket::decode,
                 OpenPlaneteerGUIPacket::handle
         );
+        CHANNEL.registerMessage(
+                packetId++,
+                SendPlayerTimePacket.class,
+                SendPlayerTimePacket::encode,
+                SendPlayerTimePacket::decode,
+                SendPlayerTimePacket::handle
+        );
     }
 }

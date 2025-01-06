@@ -9,7 +9,6 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -32,20 +31,20 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.NetworkDirection;
 import org.slf4j.Logger;
 import yaboichips.rouge_planets.capabilties.ArmorData;
+import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 import yaboichips.rouge_planets.capabilties.player.ClientPlayerData;
 import yaboichips.rouge_planets.capabilties.player.PlayerData;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataProvider;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
-import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 import yaboichips.rouge_planets.client.renderers.HumanRenderer;
-import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMaster;
+import yaboichips.rouge_planets.common.entities.HumanMob;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
+import yaboichips.rouge_planets.common.entities.merchant.RPMerchantScreen;
 import yaboichips.rouge_planets.core.RPEntities;
 import yaboichips.rouge_planets.network.RougePackets;
-import yaboichips.rouge_planets.network.SendPlayerTimePacket;
+import yaboichips.rouge_planets.network.SendPlayerDataPacket;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -55,8 +54,7 @@ import static yaboichips.rouge_planets.core.RPBlocks.BLOCKS;
 import static yaboichips.rouge_planets.core.RPEntities.ENTITIES;
 import static yaboichips.rouge_planets.core.RPItems.CREATIVE_MODE_TABS;
 import static yaboichips.rouge_planets.core.RPItems.ITEMS;
-import static yaboichips.rouge_planets.core.RPMenus.FORGE_MASTER_MENU;
-import static yaboichips.rouge_planets.core.RPMenus.MENUS;
+import static yaboichips.rouge_planets.core.RPMenus.*;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(RougePlanets.MODID)
@@ -106,7 +104,9 @@ public class RougePlanets {
     private void onClientSetup(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MenuScreens.register(FORGE_MASTER_MENU.get(), ForgeMasterScreen::new);
+            MenuScreens.register(MERCHANT_MENU.get(), RPMerchantScreen::new);
             EntityRenderers.register(RPEntities.FORGE_MASTER.get(), HumanRenderer::new);
+            EntityRenderers.register(RPEntities.RP_MERCHANT.get(), HumanRenderer::new);
         });
     }
 
@@ -115,7 +115,8 @@ public class RougePlanets {
     }
 
     public void entityAttributes(final EntityAttributeCreationEvent event) {
-        event.put(RPEntities.FORGE_MASTER.get(), ForgeMaster.createAttributes().build());
+        event.put(RPEntities.FORGE_MASTER.get(), HumanMob.createAttributes().build());
+        event.put(RPEntities.RP_MERCHANT.get(), HumanMob.createAttributes().build());
     }
 
     public static void scheduleTask(long tick, Runnable task) {
@@ -124,35 +125,36 @@ public class RougePlanets {
 
     @SubscribeEvent
     public void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
-        if(event.getObject() instanceof Player player) {
+        if (event.getObject() instanceof Player player) {
             player.reviveCaps();
-            if(!event.getObject().getCapability(RougeCapabilities.PLAYER_DATA).isPresent()) {
+            if (!event.getObject().getCapability(RougeCapabilities.PLAYER_DATA).isPresent()) {
                 event.addCapability(RougeCapabilities.PLAYER_DATA_LOCATION, new PlayerDataProvider());
             }
         }
     }
+
     @SubscribeEvent
     public void onPlayerJoin(EntityJoinLevelEvent event) {
         if (event.getEntity().level().isClientSide)
             return;
-        if (event.getEntity() instanceof ServerPlayer player){
+        if (event.getEntity() instanceof ServerPlayer player) {
             player.reviveCaps();
-            RougePackets.sendToPlayer(new SendPlayerTimePacket(PlayerDataUtils.getO2(player)), player);
+            RougePackets.sendToPlayer(new SendPlayerDataPacket(PlayerDataUtils.getO2(player), PlayerDataUtils.getCredits(player)), player);
         }
     }
 
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
-        if(event.getOriginal().level().isClientSide)
+        if (event.getOriginal().level().isClientSide)
             return;
 
-        if(event.isWasDeath()) {
+        if (event.isWasDeath()) {
             event.getOriginal().reviveCaps();
             LazyOptional<PlayerData> loNewCap = event.getOriginal().getCapability(RougeCapabilities.PLAYER_DATA);
             // loOldCap is never present!
             LazyOptional<PlayerData> loOldCap = event.getOriginal().getCapability(RougeCapabilities.PLAYER_DATA);
-            loNewCap.ifPresent( newCap -> {
-                loOldCap.ifPresent( oldCap -> {
+            loNewCap.ifPresent(newCap -> {
+                loOldCap.ifPresent(oldCap -> {
                     event.getOriginal().reviveCaps();
                     PlayerDataUtils.setO2((ServerPlayer) event.getEntity(), oldCap.getO2());
                     PlayerDataUtils.setCredits((ServerPlayer) event.getEntity(), oldCap.getCredits());
@@ -167,7 +169,7 @@ public class RougePlanets {
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side.isClient()) return;
         ServerPlayer player = (ServerPlayer) event.player;
-        RougePackets.sendToPlayer(new SendPlayerTimePacket(PlayerDataUtils.getO2(player)), player);
+        RougePackets.sendToPlayer(new SendPlayerDataPacket(PlayerDataUtils.getO2(player), PlayerDataUtils.getCredits(player)), player);
         if (PlayerDataUtils.getO2(player) > 300) {
             player.kill();
         }
@@ -201,6 +203,7 @@ public class RougePlanets {
             }
         }
     }
+
     private void renderIntOnHud(GuiGraphics guiGraphics) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;

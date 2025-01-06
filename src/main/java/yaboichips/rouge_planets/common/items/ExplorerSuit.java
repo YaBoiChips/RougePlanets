@@ -14,16 +14,18 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
-import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 import yaboichips.rouge_planets.capabilties.ArmorData;
+import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 
 import java.util.List;
 
-public class ExplorerSuit extends ArmorItem implements LevelableItem {
+public class ExplorerSuit extends ArmorItem implements LevelableItem, SlotableItem {
 
+    private final int slot;
 
-    public ExplorerSuit(ArmorMaterial p_40386_, Type p_266831_, Properties p_40388_) {
+    public ExplorerSuit(ArmorMaterial p_40386_, Type p_266831_, Properties p_40388_, int slot) {
         super(p_40386_, p_266831_, p_40388_);
+        this.slot = slot;
     }
 
     @Override
@@ -36,6 +38,11 @@ public class ExplorerSuit extends ArmorItem implements LevelableItem {
         CompoundTag tag = stack.getTag();
         tag.putInt("Level", getLevel(stack));
         stack.setTag(tag);
+    }
+
+    @Override
+    public int getSlot() {
+        return slot;
     }
 
     @Override

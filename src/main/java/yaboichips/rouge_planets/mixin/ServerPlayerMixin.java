@@ -2,7 +2,6 @@ package yaboichips.rouge_planets.mixin;
 
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
-import yaboichips.rouge_planets.capabilties.player.PlayerData;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {

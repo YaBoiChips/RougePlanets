@@ -8,9 +8,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,9 +24,6 @@ public class ForgeMaster extends HumanMob {
         super(p_21368_, p_21369_);
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 35.0D).add(Attributes.MOVEMENT_SPEED, 0.01F).add(Attributes.ARMOR, 2.0D);
-    }
 
     @Override
     protected InteractionResult mobInteract(Player p, InteractionHand hand) {
@@ -41,7 +35,7 @@ public class ForgeMaster extends HumanMob {
                     PlayerDataUtils.setPlanetContainer(player, new PlanetInventoryContainer());
                     PlayerDataUtils.setInitiated(player, true);
                     if (stack.getItem() instanceof LevelableItem item) {
-                        PlayerDataUtils.getPlanetContainer(player).addItem(RPItems.TESTARMOR.get().getDefaultInstance());
+                        PlayerDataUtils.getPlanetContainer(player).addItems(RPItems.TESTARMOR.get().getDefaultInstance(), RPItems.PLANETEER_PICKAXE.get().getDefaultInstance());
                     }
                 } else if (hand == InteractionHand.MAIN_HAND) {
                     player.openMenu(new SimpleMenuProvider((id, playerInv, container) -> new ForgeMasterMenu(id, playerInv, PlayerDataUtils.getPlanetContainer(player)), Component.literal("Forge Master")));

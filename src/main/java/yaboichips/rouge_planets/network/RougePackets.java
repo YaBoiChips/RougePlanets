@@ -37,10 +37,17 @@ public class RougePackets {
         );
         CHANNEL.registerMessage(
                 packetId++,
-                SendPlayerTimePacket.class,
-                SendPlayerTimePacket::encode,
-                SendPlayerTimePacket::decode,
-                SendPlayerTimePacket::handle
+                SendPlayerDataPacket.class,
+                SendPlayerDataPacket::encode,
+                SendPlayerDataPacket::decode,
+                SendPlayerDataPacket::handle
+        );
+        CHANNEL.registerMessage(
+                packetId++,
+                BuyItemPacket.class,
+                BuyItemPacket::encode,
+                BuyItemPacket::decode,
+                BuyItemPacket::handle
         );
     }
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {

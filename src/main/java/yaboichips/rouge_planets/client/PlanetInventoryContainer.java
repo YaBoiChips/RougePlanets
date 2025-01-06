@@ -6,6 +6,8 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import yaboichips.rouge_planets.common.entities.HumanMob;
 
+import java.util.Arrays;
+
 public class PlanetInventoryContainer extends SimpleContainer {
     private HumanMob human;
 
@@ -21,6 +23,9 @@ public class PlanetInventoryContainer extends SimpleContainer {
         return this.human == human;
     }
 
+    public void addItems(ItemStack... items){
+        Arrays.stream(items).toList().forEach(this::addItem);
+    }
     public void fromTag(ListTag p_40108_) {
         for(int i = 0; i < this.getContainerSize(); ++i) {
             this.setItem(i, ItemStack.EMPTY);

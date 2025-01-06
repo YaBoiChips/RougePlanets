@@ -7,11 +7,8 @@ import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import yaboichips.rouge_planets.common.items.CreditItem;
-import yaboichips.rouge_planets.common.items.ExplorerSuit;
-import yaboichips.rouge_planets.common.items.PlaneteerManuel;
-import yaboichips.rouge_planets.common.items.RopeBlockItem;
-
+import yaboichips.rouge_planets.common.items.*;
+import yaboichips.rouge_planets.common.items.tools.PlaneteerPickaxe;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 
@@ -38,12 +35,19 @@ public class RPItems {
     public static final RegistryObject<Item> ENERGETIC_DUST = ITEMS.register("energetic_dust", ()-> new Item(new Item.Properties()));
 
     //Tools & Armor
-    public static final RegistryObject<Item> TESTARMOR = ITEMS.register("test",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.HELMET, new Item.Properties()));
+    public static final RegistryObject<Item> PLANETEER_PICKAXE = ITEMS.register("planeteer_pickaxe", PlaneteerPickaxe::new);
+    public static final RegistryObject<Item> TESTARMOR = ITEMS.register("test",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.HELMET, new Item.Properties(), 9));
 
     // Utility Items
     public static final RegistryObject<Item> ROPE = ITEMS.register("rope",() -> new RopeBlockItem(RPBlocks.ROPE.get(), new Item.Properties()));
-    public static final RegistryObject<Item> JERKY = ITEMS.register("jerky", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(3).saturationMod(3).build())));
-    public static final RegistryObject<Item> CREDIT = ITEMS.register("credit", CreditItem::new);
+    public static final RegistryObject<Item> SPACE_TORCH = ITEMS.register("space_torch",() -> new BlockItem(RPBlocks.SPACE_TORCH.get(), new Item.Properties()));
+    public static final RegistryObject<Item> JERKY = ITEMS.register("jerky", () -> new SimpleSlotableItem(new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(3).saturationMod(3).build()), 8));
+    public static final RegistryObject<Item> MAGAZINE = ITEMS.register("ammo", () -> new SimpleSlotableItem(new Item.Properties(), 7));
+
+    public static final RegistryObject<Item> CREDIT = ITEMS.register("credit", () -> new CreditItem(1));
+    public static final RegistryObject<Item> HIGH_CREDIT = ITEMS.register("high_credit", () -> new CreditItem(9));
+    public static final RegistryObject<Item> RARE_CREDIT = ITEMS.register("rare_credit", () -> new CreditItem(81));
+    public static final RegistryObject<Item> LEGENDARY_CREDIT = ITEMS.register("legendary_credit", () -> new CreditItem(729));
     public static final RegistryObject<Item> PLANETEER_MANUEL = ITEMS.register("planeteer_manuel", PlaneteerManuel::new);
 
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("rp_tab", () -> CreativeModeTab.builder()

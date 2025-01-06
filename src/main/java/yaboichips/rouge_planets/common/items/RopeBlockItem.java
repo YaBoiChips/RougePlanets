@@ -1,6 +1,7 @@
 package yaboichips.rouge_planets.common.items;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -13,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import yaboichips.rouge_planets.RougePlanets;
 
-public class RopeBlockItem extends BlockItem {
+public class RopeBlockItem extends BlockItem implements SlotableItem {
     public RopeBlockItem(Block p_40565_, Properties p_40566_) {
         super(p_40565_, p_40566_);
     }
@@ -21,9 +22,6 @@ public class RopeBlockItem extends BlockItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return InteractionResult.SUCCESS;
-        }
         Player player = context.getPlayer();
         if (player == null) {
             return InteractionResult.FAIL;
@@ -31,30 +29,34 @@ public class RopeBlockItem extends BlockItem {
 
         BlockPos clickedPos = context.getClickedPos();
 
-        scheduleRopePlacement(serverLevel, clickedPos.below(), player);
+        scheduleRopePlacement(level, clickedPos.below(), player);
         return InteractionResult.CONSUME;
     }
 
-    private void scheduleRopePlacement(ServerLevel serverLevel, BlockPos startPos, Player player) {
+    private void scheduleRopePlacement(Level serverLevel, BlockPos startPos, Player player) {
         RougePlanets.scheduleTask(10 + RougePlanets.currentTick, () -> {
             placeRope(serverLevel, startPos, player);
         });
     }
 
-    private void placeRope(ServerLevel serverLevel, BlockPos currentPos, Player player) {
-        if (!serverLevel.isEmptyBlock(currentPos)) {
+    private void placeRope(Level level, BlockPos currentPos, Player player) {
+        if (!level.isEmptyBlock(currentPos)) {
             return;
         }
         ItemStack ropeStack = findRopeInInventory(player);
         if (ropeStack == ItemStack.EMPTY) {
             return;
         }
-        serverLevel.setBlock(currentPos, this.getBlock().defaultBlockState(), 3);
-        serverLevel.playSound(null, currentPos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1, 1);
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.setBlock(currentPos, this.getBlock().defaultBlockState(), 3);
+            serverLevel.playSound(null, currentPos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1, 1);
+        } else {
+            level.addParticle(ParticleTypes.POOF, currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0, 0, 0);
+        }
         if (!player.isCreative()) {
             ropeStack.shrink(1);
         }
-        scheduleRopePlacement(serverLevel, currentPos.below(), player);
+        scheduleRopePlacement(level, currentPos.below(), player);
     }
 
     private ItemStack findRopeInInventory(Player player) {
@@ -64,5 +66,10 @@ public class RopeBlockItem extends BlockItem {
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public int getSlot() {
+        return 4;
     }
 }

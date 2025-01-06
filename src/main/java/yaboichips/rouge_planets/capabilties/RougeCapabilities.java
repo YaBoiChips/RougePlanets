@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
+import yaboichips.rouge_planets.capabilties.player.PlayerData;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 

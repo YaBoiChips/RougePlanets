@@ -9,15 +9,20 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -28,33 +33,30 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.PacketDistributor;
 import org.slf4j.Logger;
 import yaboichips.rouge_planets.capabilties.ArmorData;
-import yaboichips.rouge_planets.capabilties.PlayerData;
-import yaboichips.rouge_planets.capabilties.PlayerDataUtils;
+import yaboichips.rouge_planets.capabilties.player.ClientPlayerData;
+import yaboichips.rouge_planets.capabilties.player.PlayerData;
+import yaboichips.rouge_planets.capabilties.player.PlayerDataProvider;
+import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.capabilties.RougeCapabilities;
-import yaboichips.rouge_planets.capabilties.handlers.CapabilityHandler;
 import yaboichips.rouge_planets.client.renderers.HumanRenderer;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMaster;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
 import yaboichips.rouge_planets.core.RPEntities;
 import yaboichips.rouge_planets.network.RougePackets;
 import yaboichips.rouge_planets.network.SendPlayerTimePacket;
-import yaboichips.rouge_planets.network.SyncPlayerDataPacket;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static yaboichips.rouge_planets.capabilties.RougeCapabilities.PLAYER_DATA;
 import static yaboichips.rouge_planets.core.RPBlocks.BLOCKS;
 import static yaboichips.rouge_planets.core.RPEntities.ENTITIES;
 import static yaboichips.rouge_planets.core.RPItems.CREATIVE_MODE_TABS;
 import static yaboichips.rouge_planets.core.RPItems.ITEMS;
 import static yaboichips.rouge_planets.core.RPMenus.FORGE_MASTER_MENU;
 import static yaboichips.rouge_planets.core.RPMenus.MENUS;
-import static yaboichips.rouge_planets.network.RougePackets.CHANNEL;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(RougePlanets.MODID)
@@ -65,7 +67,6 @@ public class RougePlanets {
     public static final String MODID = "rougeplanets";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static int syncedTime = 0;
     public static long currentTick = 0;
     private static final Map<Long, Runnable> scheduledTasks = new ConcurrentHashMap<>();
 
@@ -82,7 +83,6 @@ public class RougePlanets {
         CREATIVE_MODE_TABS.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
 
 
         modEventBus.addListener(this::onClientSetup);
@@ -122,50 +122,52 @@ public class RougePlanets {
         scheduledTasks.put(tick, task);
     }
 
-    public static void setTime(int time) {
-        syncedTime = time;
-    }
-
-//    public static void syncData(ServerPlayer player) {
-//        player.getCapability(PLAYER_DATA).ifPresent(data -> {
-//            data.deserializeNBT(data.serializeNBT());
-//        });
-//    }
-
     @SubscribeEvent
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        System.out.println("Joined");
-//        if (event.getEntity() instanceof ServerPlayer player){
-//            syncData(player);
-//        }
+    public void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
+        if(event.getObject() instanceof Player player) {
+            player.reviveCaps();
+            if(!event.getObject().getCapability(RougeCapabilities.PLAYER_DATA).isPresent()) {
+                event.addCapability(RougeCapabilities.PLAYER_DATA_LOCATION, new PlayerDataProvider());
+            }
+        }
+    }
+    @SubscribeEvent
+    public void onPlayerJoin(EntityJoinLevelEvent event) {
+        if (event.getEntity().level().isClientSide)
+            return;
+        if (event.getEntity() instanceof ServerPlayer player){
+            player.reviveCaps();
+            RougePackets.sendToPlayer(new SendPlayerTimePacket(PlayerDataUtils.getO2(player)), player);
+        }
     }
 
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
-            event.getOriginal().getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(original -> {
-                event.getEntity().getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(clone -> {
-                    clone.setIsInitiated(original.getIsInitiated());
-                    clone.setPlanetContainer(original.getPlanetContainer());
-                    clone.setCredits(original.getCredits());
-                    clone.setO2(original.getO2());
+        if(event.getOriginal().level().isClientSide)
+            return;
+
+        if(event.isWasDeath()) {
+            event.getOriginal().reviveCaps();
+            LazyOptional<PlayerData> loNewCap = event.getOriginal().getCapability(RougeCapabilities.PLAYER_DATA);
+            // loOldCap is never present!
+            LazyOptional<PlayerData> loOldCap = event.getOriginal().getCapability(RougeCapabilities.PLAYER_DATA);
+            loNewCap.ifPresent( newCap -> {
+                loOldCap.ifPresent( oldCap -> {
+                    event.getOriginal().reviveCaps();
+                    PlayerDataUtils.setO2((ServerPlayer) event.getEntity(), oldCap.getO2());
+                    PlayerDataUtils.setCredits((ServerPlayer) event.getEntity(), oldCap.getCredits());
+                    PlayerDataUtils.setInitiated((ServerPlayer) event.getEntity(), oldCap.getIsInitiated());
+                    PlayerDataUtils.setPlanetContainer((ServerPlayer) event.getEntity(), oldCap.getPlanetContainer());
                 });
             });
         }
-    }
-    @SubscribeEvent
-    public void onPlayerSave(PlayerEvent.SaveToFile event) {
-        System.out.println("SAVED");
-//        if (event.getEntity() instanceof ServerPlayer player){
-//            syncData(player);
-//        }
     }
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side.isClient()) return;
         ServerPlayer player = (ServerPlayer) event.player;
-        RougePackets.CHANNEL.sendTo(new SendPlayerTimePacket(PlayerDataUtils.getO2(player)), player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+        RougePackets.sendToPlayer(new SendPlayerTimePacket(PlayerDataUtils.getO2(player)), player);
         if (PlayerDataUtils.getO2(player) > 300) {
             player.kill();
         }
@@ -199,13 +201,14 @@ public class RougePlanets {
             }
         }
     }
-
     private void renderIntOnHud(GuiGraphics guiGraphics) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 
+        if (!mc.player.isLocalPlayer()) return;
+
         // Set the text to render
-        String text = "Value: " + syncedTime;
+        String text = "Value: " + ClientPlayerData.getO2();
 
         // Determine the position (bottom-left corner)
         int x = 5; // 5 pixels from the left

@@ -1,15 +1,11 @@
 package yaboichips.rouge_planets.mixin;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import yaboichips.rouge_planets.capabilties.PlayerData;
+import yaboichips.rouge_planets.capabilties.player.PlayerData;
 
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerMixin implements PlayerData {
+public abstract class ServerPlayerMixin {
 //    @Unique
 //    public boolean isInitiated;
 //

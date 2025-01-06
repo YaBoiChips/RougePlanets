@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import yaboichips.rouge_planets.capabilties.PlayerDataUtils;
+import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 
 public class CreditItem extends Item {
     public CreditItem() {

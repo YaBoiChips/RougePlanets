@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import yaboichips.rouge_planets.capabilties.PlayerDataUtils;
+import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.common.items.LevelableItem;
 import yaboichips.rouge_planets.core.RPMenus;
 

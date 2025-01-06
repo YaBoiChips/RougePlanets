@@ -1,6 +1,7 @@
-package yaboichips.rouge_planets.capabilties;
+package yaboichips.rouge_planets.capabilties.player;
 
 import net.minecraft.server.level.ServerPlayer;
+import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 import yaboichips.rouge_planets.client.PlanetInventoryContainer;
 
 public class PlayerDataUtils {

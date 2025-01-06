@@ -1,7 +1,9 @@
 package yaboichips.rouge_planets.network;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
@@ -40,12 +42,8 @@ public class RougePackets {
                 SendPlayerTimePacket::decode,
                 SendPlayerTimePacket::handle
         );
-        CHANNEL.registerMessage(
-                packetId++,
-                SyncPlayerDataPacket.class,
-                SyncPlayerDataPacket::encode,
-                SyncPlayerDataPacket::decode,
-                SyncPlayerDataPacket::handle
-        );
+    }
+    public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 }

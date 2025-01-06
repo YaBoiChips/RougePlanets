@@ -14,7 +14,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import yaboichips.rouge_planets.capabilties.PlayerDataUtils;
+import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.client.PlanetInventoryContainer;
 import yaboichips.rouge_planets.common.entities.HumanMob;
 import yaboichips.rouge_planets.common.items.LevelableItem;

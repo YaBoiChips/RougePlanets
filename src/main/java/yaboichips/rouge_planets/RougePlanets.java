@@ -128,13 +128,16 @@ public class RougePlanets {
 
 //    public static void syncData(ServerPlayer player) {
 //        player.getCapability(PLAYER_DATA).ifPresent(data -> {
-//            CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncPlayerDataPacket(data.serializeNBT()));
+//            data.deserializeNBT(data.serializeNBT());
 //        });
 //    }
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         System.out.println("Joined");
+//        if (event.getEntity() instanceof ServerPlayer player){
+//            syncData(player);
+//        }
     }
 
     @SubscribeEvent

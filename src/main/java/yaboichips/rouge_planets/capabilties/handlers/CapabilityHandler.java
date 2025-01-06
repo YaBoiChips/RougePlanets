@@ -19,7 +19,8 @@ public class CapabilityHandler {
     @SubscribeEvent
     public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof ServerPlayer) {
-            event.addCapability(RougeCapabilities.PLAYER_DATA_LOCATION, new ICapabilitySerializable<CompoundTag>() {
+
+            ICapabilitySerializable<CompoundTag> provider = new ICapabilitySerializable<>() {
 
                 private final PlayerDataCapability instance = new PlayerDataCapability();
                 private final LazyOptional<PlayerData> lazyInstance =
@@ -36,11 +37,14 @@ public class CapabilityHandler {
                     return instance.serializeNBT();
                 }
 
+
                 @Override
                 public void deserializeNBT(CompoundTag tag) {
                     instance.deserializeNBT(tag);
                 }
-            });
+            };
+
+            event.addCapability(RougeCapabilities.PLAYER_DATA_LOCATION, provider);
         }
     }
 }

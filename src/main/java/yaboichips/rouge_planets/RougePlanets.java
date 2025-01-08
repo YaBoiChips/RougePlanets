@@ -40,6 +40,8 @@ import yaboichips.rouge_planets.capabilties.player.PlayerDataProvider;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.client.renderers.HumanRenderer;
 import yaboichips.rouge_planets.common.entities.HumanMob;
+import yaboichips.rouge_planets.common.entities.augmentor.AugmentorMenu;
+import yaboichips.rouge_planets.common.entities.augmentor.AugmentorScreen;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
 import yaboichips.rouge_planets.common.entities.merchant.RPMerchantScreen;
 import yaboichips.rouge_planets.core.RPEntities;
@@ -105,8 +107,10 @@ public class RougePlanets {
         event.enqueueWork(() -> {
             MenuScreens.register(FORGE_MASTER_MENU.get(), ForgeMasterScreen::new);
             MenuScreens.register(MERCHANT_MENU.get(), RPMerchantScreen::new);
+            MenuScreens.register(AUGMENTOR_MENU.get(), AugmentorScreen::new);
             EntityRenderers.register(RPEntities.FORGE_MASTER.get(), HumanRenderer::new);
             EntityRenderers.register(RPEntities.RP_MERCHANT.get(), HumanRenderer::new);
+            EntityRenderers.register(RPEntities.AUGMENTOR.get(), HumanRenderer::new);
         });
     }
 
@@ -117,6 +121,8 @@ public class RougePlanets {
     public void entityAttributes(final EntityAttributeCreationEvent event) {
         event.put(RPEntities.FORGE_MASTER.get(), HumanMob.createAttributes().build());
         event.put(RPEntities.RP_MERCHANT.get(), HumanMob.createAttributes().build());
+        event.put(RPEntities.AUGMENTOR.get(), HumanMob.createAttributes().build());
+
     }
 
     public static void scheduleTask(long tick, Runnable task) {

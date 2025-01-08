@@ -8,6 +8,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import yaboichips.rouge_planets.common.items.*;
+import yaboichips.rouge_planets.common.items.augments.AugmentItem;
+import yaboichips.rouge_planets.common.items.augments.AugmentType;
 import yaboichips.rouge_planets.common.items.tools.PlaneteerPickaxe;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
@@ -43,6 +45,9 @@ public class RPItems {
     public static final RegistryObject<Item> SPACE_TORCH = ITEMS.register("space_torch",() -> new BlockItem(RPBlocks.SPACE_TORCH.get(), new Item.Properties()));
     public static final RegistryObject<Item> JERKY = ITEMS.register("jerky", () -> new SimpleSlotableItem(new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(3).saturationMod(3).build()), 8));
     public static final RegistryObject<Item> MAGAZINE = ITEMS.register("ammo", () -> new SimpleSlotableItem(new Item.Properties(), 7));
+
+
+    public static final RegistryObject<Item> TEST_AUGMENT = ITEMS.register("test_augment", () -> new AugmentItem(AugmentType.HASTE));
 
     public static final RegistryObject<Item> CREDIT = ITEMS.register("credit", () -> new CreditItem(1));
     public static final RegistryObject<Item> HIGH_CREDIT = ITEMS.register("high_credit", () -> new CreditItem(9));

@@ -16,7 +16,7 @@ import yaboichips.rouge_planets.core.RPMenus;
 
 public class RPMerchantMenu extends AbstractContainerMenu {
 
-    private Container container;
+    private final Container container;
 
     public Player player;
 
@@ -37,10 +37,6 @@ public class RPMerchantMenu extends AbstractContainerMenu {
         }
     }
 
-
-    public RPMerchantMenu(int id, Inventory playerInventory) {
-        super(RPMenus.MERCHANT_MENU.get(), id);
-    }
 
     public RPMerchantMenu(int i, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
         this(i, inventory, new SimpleContainer(13));

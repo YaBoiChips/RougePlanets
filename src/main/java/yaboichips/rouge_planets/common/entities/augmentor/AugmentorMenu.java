@@ -9,17 +9,14 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import yaboichips.rouge_planets.capabilties.RougeCapabilities;
+import yaboichips.rouge_planets.common.items.SlotableItem;
 import yaboichips.rouge_planets.common.items.augments.AugmentItem;
 import yaboichips.rouge_planets.core.RPMenus;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AugmentorMenu extends AbstractContainerMenu {
     private Container container;
 
     public Player player;
-    private final List<Slot> dynamicSlots = new ArrayList<>();
     private final SimpleContainer augmentableSlot = new SimpleContainer(1);
 
     public AugmentorMenu(int id, Inventory playerInventory, Container container) {
@@ -33,6 +30,11 @@ public class AugmentorMenu extends AbstractContainerMenu {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return stack.getCapability(RougeCapabilities.AUGMENTABLE).isPresent();
+            }
+
+            @Override
+            public boolean mayPickup(Player p_40228_) {
+                return false;
             }
 
             @Override
@@ -63,32 +65,36 @@ public class AugmentorMenu extends AbstractContainerMenu {
         this(i, inventory, new SimpleContainer(13));
     }
 
+    public void onClose(){
+        ItemStack stack = augmentableSlot.getItem(0);
+        container.setItem(((SlotableItem)stack.getItem()).getSlot(), stack);
+    }
+
+
     private void onSlotChanged(Slot slot) {
         if (slot.getItem().getCapability(RougeCapabilities.AUGMENTABLE).isPresent()) {
             slot.getItem().getCapability(RougeCapabilities.AUGMENTABLE).ifPresent(cap -> {
-                        for (int i = 0; i < cap.getAugmentSlots(); i++) {
-                            checkContainerSize(cap.getAugments(), cap.getAugmentSlots());
-                            Slot dynamicSlot = new Slot(cap.getAugments(), i, 88 + i * 18, 140) {
-                                @Override
-                                public boolean mayPlace(ItemStack stack) {
-                                    return stack.getItem() instanceof AugmentItem;
-                                }
-                            };
-                            dynamicSlots.add(dynamicSlot);
-                            this.addSlot(dynamicSlot);
+                for (int i = 0; i < cap.getAugmentSlots(); i++) {
+//                            checkContainerSize(cap.getAugments(), cap.getAugmentSlots());
+                    Slot dynamicSlot = new Slot(cap.getAugments(), i, 88 + i * 18, 140) {
+                        @Override
+                        public boolean mayPlace(ItemStack stack) {
+                            return stack.getItem() instanceof AugmentItem;
                         }
-                    }
-            );
-        } else {
-            clearDynamicSlots();
+                    };
+                    this.addSlot(dynamicSlot);
+                }
+            });
         }
     }
 
-    private void clearDynamicSlots() {
-        // Remove all dynamic slots from the main slot list
-        this.slots.removeAll(dynamicSlots);
-        dynamicSlots.clear();
+    public void applyAugment(){
+        ItemStack stack = augmentableSlot.getItem(0);
+        if (stack.getItem() instanceof SlotableItem item){
+            container.setItem(item.getSlot(), stack);
+        }
     }
+
 
     @Override
     public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {

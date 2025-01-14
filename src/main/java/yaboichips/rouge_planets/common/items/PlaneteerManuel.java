@@ -34,7 +34,7 @@ public class PlaneteerManuel extends Item {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int p_41407_, boolean p_41408_) {
         if (entity instanceof ServerPlayer player) {
             if (player.getMainHandItem() == stack){
-                PlayerDataUtils.addO2(player, 1);
+                PlayerDataUtils.setInitiated(player, false);
             }
         }
         super.inventoryTick(stack, level, entity, p_41407_, p_41408_);

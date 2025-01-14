@@ -7,6 +7,19 @@ public class PlayerData {
     public boolean isInitiated;
     public int credits;
     public int o2;
+
+    private boolean pyrolithActive;
+    private boolean azuriumActive;
+    private boolean electryteActive;
+    private boolean chlorosynthActive;
+
+    private int pyrolithTimer;
+    private int azuriumTimer;
+    private int electryteTimer;
+    private int chlorosynthTimer;
+
+
+
     public PlanetInventoryContainer planetInventory;
 
     public PlayerData() {
@@ -98,6 +111,15 @@ public class PlayerData {
         tag.putBoolean("Initiated", getIsInitiated());
         tag.putInt("Credits", getCredits());
         tag.putInt("O2", getCredits());
+        tag.putInt("PyrolithTimer", getPyrolithTimer());
+        tag.putInt("AzuriumTimer", getAzuriumTimer());
+        tag.putInt("ElectryteTimer", getElectryteTimer());
+        tag.putInt("ChlorosynthTimer", getChlorosynthTimer());
+        tag.putBoolean("Pyrolith", isPyrolithActive());
+        tag.putBoolean("Azurium", isAzuriumActive());
+        tag.putBoolean("Electryte", isElectryteActive());
+        tag.putBoolean("Chlorosynth", isChlorosynthActive());
+
     }
 
 
@@ -112,7 +134,95 @@ public class PlayerData {
             this.setCredits(tag.getInt("Credits"));
         }
         if (tag.contains("O2")) {
-            this.setCredits(tag.getInt("O2"));
+            this.setO2(tag.getInt("O2"));
         }
+        if (tag.contains("PyrolithTimer")) {
+            this.setPyrolithTimer(tag.getInt("PyrolithTimer"));
+        }
+        if (tag.contains("ChlorosynthTimer")) {
+            this.setChlorosynthTimer(tag.getInt("ChlorosynthTimer"));
+        }
+        if (tag.contains("AzuriumTimer")) {
+            this.setAzuriumTimer(tag.getInt("AzuriumTimer"));
+        }
+        if (tag.contains("ElectryteTimer")) {
+            this.setElectryteTimer(tag.getInt("ElectryteTimer"));
+        }
+        if (tag.contains("Pyrolith")) {
+            this.setPyrolithActive(tag.getBoolean("Pyrolith"));
+        }
+        if (tag.contains("Azurium")) {
+            this.setAzuriumActive(tag.getBoolean("Azurium"));
+        }
+        if (tag.contains("Electryte")) {
+            this.setElectryteActive(tag.getBoolean("Electryte"));
+        }
+        if (tag.contains("Chlorosynth")) {
+            this.setChlorosynthActive(tag.getBoolean("Chlorosynth"));
+        }
+    }
+
+    public boolean isPyrolithActive() {
+        return pyrolithActive;
+    }
+
+    public void setPyrolithActive(boolean pyrolithActive) {
+        this.pyrolithActive = pyrolithActive;
+    }
+
+    public boolean isAzuriumActive() {
+        return azuriumActive;
+    }
+
+    public void setAzuriumActive(boolean azuriumActive) {
+        this.azuriumActive = azuriumActive;
+    }
+
+    public boolean isElectryteActive() {
+        return electryteActive;
+    }
+
+    public void setElectryteActive(boolean electryteActive) {
+        this.electryteActive = electryteActive;
+    }
+
+    public boolean isChlorosynthActive() {
+        return chlorosynthActive;
+    }
+
+    public void setChlorosynthActive(boolean chlorosynthActive) {
+        this.chlorosynthActive = chlorosynthActive;
+    }
+
+    public int getPyrolithTimer() {
+        return pyrolithTimer;
+    }
+
+    public void setPyrolithTimer(int pyrolithTimer) {
+        this.pyrolithTimer = pyrolithTimer;
+    }
+
+    public int getAzuriumTimer() {
+        return azuriumTimer;
+    }
+
+    public void setAzuriumTimer(int azuriumTimer) {
+        this.azuriumTimer = azuriumTimer;
+    }
+
+    public int getElectryteTimer() {
+        return electryteTimer;
+    }
+
+    public void setElectryteTimer(int electryteTimer) {
+        this.electryteTimer = electryteTimer;
+    }
+
+    public int getChlorosynthTimer() {
+        return chlorosynthTimer;
+    }
+
+    public void setChlorosynthTimer(int chlorosynthTimer) {
+        this.chlorosynthTimer = chlorosynthTimer;
     }
 }

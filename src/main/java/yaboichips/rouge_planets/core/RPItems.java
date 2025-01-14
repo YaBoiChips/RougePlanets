@@ -10,6 +10,9 @@ import net.minecraftforge.registries.RegistryObject;
 import yaboichips.rouge_planets.common.items.*;
 import yaboichips.rouge_planets.common.items.augments.AugmentItem;
 import yaboichips.rouge_planets.common.items.augments.AugmentType;
+import yaboichips.rouge_planets.common.items.crystals.Electryte;
+import yaboichips.rouge_planets.common.items.crystals.Chlorosynth;
+import yaboichips.rouge_planets.common.items.crystals.Pyrolith;
 import yaboichips.rouge_planets.common.items.tools.PlaneteerPickaxe;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
@@ -54,6 +57,21 @@ public class RPItems {
     public static final RegistryObject<Item> RARE_CREDIT = ITEMS.register("rare_credit", () -> new CreditItem(81));
     public static final RegistryObject<Item> LEGENDARY_CREDIT = ITEMS.register("legendary_credit", () -> new CreditItem(729));
     public static final RegistryObject<Item> PLANETEER_MANUEL = ITEMS.register("planeteer_manuel", PlaneteerManuel::new);
+
+    //Crystals
+    public static final RegistryObject<Item> PYROLITH = ITEMS.register("pyrolith", Pyrolith::new);
+    public static final RegistryObject<Item> ELECTRYTE = ITEMS.register("electryte", Electryte::new);
+
+    public static final RegistryObject<Item> CHLOROSYNTH = ITEMS.register("chlorosynth", Chlorosynth::new);
+
+
+
+    public static final RegistryObject<Item> AZURIUM_BLOCK = ITEMS.register("azurium_block", ()-> new BlockItem(RPBlocks.AZURIUM_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> PYROLITH_BLOCK = ITEMS.register("pyrolith_block", ()-> new BlockItem(RPBlocks.PYROLITH_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> ELECTRYTE_BLOCK = ITEMS.register("electryte_block", ()-> new BlockItem(RPBlocks.ELECTRYTE_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CHLOROSYNTH_BLOCK = ITEMS.register("chlorosynth_block", ()-> new BlockItem(RPBlocks.CHLOROSYNTH_BLOCK.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> TP = ITEMS.register("tp", ()-> new BlockItem(RPBlocks.TP.get(), new Item.Properties()));
 
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("rp_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)

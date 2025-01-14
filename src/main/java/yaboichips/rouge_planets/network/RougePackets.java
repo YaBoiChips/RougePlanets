@@ -49,8 +49,25 @@ public class RougePackets {
                 BuyItemPacket::decode,
                 BuyItemPacket::handle
         );
+        CHANNEL.registerMessage(
+                packetId++,
+                ApplyAugmentPacket.class,
+                ApplyAugmentPacket::encode,
+                ApplyAugmentPacket::decode,
+                ApplyAugmentPacket::handle
+        );
+        CHANNEL.registerMessage(
+                packetId++,
+                SendItemsToSlotPacket.class,
+                SendItemsToSlotPacket::encode,
+                SendItemsToSlotPacket::decode,
+                SendItemsToSlotPacket::handle
+        );
     }
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+    }
+    public static <MSG> void sendToAll(MSG packet) {
+        CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
     }
 }

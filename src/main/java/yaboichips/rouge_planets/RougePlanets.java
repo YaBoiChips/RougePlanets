@@ -2,6 +2,7 @@ package yaboichips.rouge_planets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.logging.LogUtils;
+import commoble.infiniverse.api.InfiniverseAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -9,9 +10,17 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
@@ -22,6 +31,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,7 +51,6 @@ import yaboichips.rouge_planets.capabilties.player.PlayerDataProvider;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.client.renderers.HumanRenderer;
 import yaboichips.rouge_planets.common.entities.HumanMob;
-import yaboichips.rouge_planets.common.entities.augmentor.AugmentorMenu;
 import yaboichips.rouge_planets.common.entities.augmentor.AugmentorScreen;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
 import yaboichips.rouge_planets.common.entities.merchant.RPMerchantScreen;
@@ -48,8 +58,11 @@ import yaboichips.rouge_planets.core.RPEntities;
 import yaboichips.rouge_planets.network.RougePackets;
 import yaboichips.rouge_planets.network.SendPlayerDataPacket;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static yaboichips.rouge_planets.core.RPBlocks.BLOCKS;
@@ -69,6 +82,9 @@ public class RougePlanets {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static long currentTick = 0;
     private static final Map<Long, Runnable> scheduledTasks = new ConcurrentHashMap<>();
+    public static final Map<UUID, ResourceLocation> playerDimensions = new HashMap<>();
+    public static ResourceKey<Level> MINER_DIMENSION = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath(MODID, "miner_dimension"));
+
 
 
     // Create a Deferred Register to hold Blocks which will all be registered under the "rougeplanets" namespace
@@ -129,6 +145,11 @@ public class RougePlanets {
         scheduledTasks.put(tick, task);
     }
 
+    public static void clearTask() {
+        scheduledTasks.clear();
+    }
+
+
     @SubscribeEvent
     public void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player player) {
@@ -154,6 +175,15 @@ public class RougePlanets {
         if (event.getOriginal().level().isClientSide)
             return;
 
+        ResourceKey<Level> fromDimension = event.getOriginal().level().dimension();
+
+        // Check if the dimension the player is leaving belongs to your mod
+        if (fromDimension.location().getNamespace().equals(MODID)) {
+            if (event.getEntity().getServer().getLevel(fromDimension).players().isEmpty()) {
+                InfiniverseAPI.get().markDimensionForUnregistration(event.getEntity().getServer(), fromDimension);
+            }
+        }
+
         if (event.isWasDeath()) {
             event.getOriginal().reviveCaps();
             LazyOptional<PlayerData> loNewCap = event.getOriginal().getCapability(RougeCapabilities.PLAYER_DATA);
@@ -170,7 +200,29 @@ public class RougePlanets {
             });
         }
     }
+    @SubscribeEvent
+    public void onPlayerChangedDimension(AttackEntityEvent event) {
+        event.getEntity().getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(playerData -> {
+            if (playerData.isPyrolithActive()){
+                event.getTarget().setSecondsOnFire(30);
+            }
+            if (playerData.isAzuriumActive()){
+                ((LivingEntity)event.getTarget()).addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
+            }
+        });
+    }
 
+    @SubscribeEvent
+    public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        ResourceKey<Level> fromDimension = event.getFrom();
+
+        // Check if the dimension the player is leaving belongs to your mod
+        if (fromDimension.location().getNamespace().equals(MODID)) {
+            if (event.getEntity().getServer().getLevel(fromDimension).players().isEmpty()) {
+                InfiniverseAPI.get().markDimensionForUnregistration(event.getEntity().getServer(), fromDimension);
+            }
+        }
+    }
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side.isClient()) return;

@@ -9,13 +9,16 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.client.PlanetInventoryContainer;
 import yaboichips.rouge_planets.common.entities.HumanMob;
-import yaboichips.rouge_planets.common.items.LevelableItem;
+import yaboichips.rouge_planets.common.items.SlotableItem;
 import yaboichips.rouge_planets.core.RPItems;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 
@@ -31,12 +34,9 @@ public class ForgeMaster extends HumanMob {
             if (p instanceof ServerPlayer player) {
                 if (!PlayerDataUtils.getIsInitiated(player)) {
                     player.sendSystemMessage(Component.literal("Initiated"));
-                    ItemStack stack = RPItems.TESTARMOR.get().getDefaultInstance();
                     PlayerDataUtils.setPlanetContainer(player, new PlanetInventoryContainer());
                     PlayerDataUtils.setInitiated(player, true);
-                    if (stack.getItem() instanceof LevelableItem item) {
-                        PlayerDataUtils.getPlanetContainer(player).addItems(RPItems.TESTARMOR.get().getDefaultInstance(), RPItems.PLANETEER_PICKAXE.get().getDefaultInstance());
-                    }
+                    defaultItems().forEach(item -> PlayerDataUtils.getPlanetContainer(player).setItem(((SlotableItem) item).getSlot(), item.getDefaultInstance()));
                 } else if (hand == InteractionHand.MAIN_HAND) {
                     player.openMenu(new SimpleMenuProvider((id, playerInv, container) -> new ForgeMasterMenu(id, playerInv, PlayerDataUtils.getPlanetContainer(player)), Component.literal("Forge Master")));
                     return InteractionResult.SUCCESS;
@@ -44,6 +44,13 @@ public class ForgeMaster extends HumanMob {
             }
         }
         return InteractionResult.PASS;
+    }
+
+    private List<Item> defaultItems() {
+        List<Item> items = new ArrayList<>();
+        items.add(RPItems.PLANETEER_PICKAXE.get());
+        items.add(RPItems.TESTARMOR.get());
+        return items;
     }
 
     @Override

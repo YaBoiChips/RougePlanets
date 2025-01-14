@@ -14,6 +14,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import yaboichips.rouge_planets.RougePlanets;
 
+import static yaboichips.rouge_planets.RougePlanets.clearTask;
+
 public class RopeBlockItem extends BlockItem implements SlotableItem {
     public RopeBlockItem(Block p_40565_, Properties p_40566_) {
         super(p_40565_, p_40566_);
@@ -41,10 +43,12 @@ public class RopeBlockItem extends BlockItem implements SlotableItem {
 
     private void placeRope(Level level, BlockPos currentPos, Player player) {
         if (!level.isEmptyBlock(currentPos)) {
+            clearTask();
             return;
         }
         ItemStack ropeStack = findRopeInInventory(player);
         if (ropeStack == ItemStack.EMPTY) {
+            clearTask();
             return;
         }
         if (level instanceof ServerLevel serverLevel) {

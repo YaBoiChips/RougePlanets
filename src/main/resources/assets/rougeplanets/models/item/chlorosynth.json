@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "rougeplanets:item/rope"
+    "layer0": "rougeplanets:item/chlorosynth"
   }
 }

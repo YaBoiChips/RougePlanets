@@ -2,8 +2,9 @@ package yaboichips.rouge_planets.common.items.crystals;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -30,15 +31,16 @@ public class Pyrolith extends Item {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         player.getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(playerData -> {
-            playerData.setPyrolithActive(true);
-            playerData.setPyrolithTimer(30);
+            playerData.setPyrolithTimer(30 * 20);
         });
         for (int step = 1; step <= STEPS; step++) {
             double radius = (MAX_RADIUS / STEPS) * step;
             sendFlameParticles(level, player, radius);
             applyFireAndDamageToEntities(level, player, radius);
         }
-        player.getCooldowns().addCooldown(stack.getItem(), 30);
+        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 30 * 20));
+        player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
+        stack.shrink(1);
         return InteractionResultHolder.consume(stack);
     }
 

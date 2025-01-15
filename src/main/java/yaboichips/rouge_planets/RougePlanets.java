@@ -9,11 +9,12 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
@@ -31,7 +33,6 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -54,15 +55,14 @@ import yaboichips.rouge_planets.common.entities.HumanMob;
 import yaboichips.rouge_planets.common.entities.augmentor.AugmentorScreen;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
 import yaboichips.rouge_planets.common.entities.merchant.RPMerchantScreen;
+import yaboichips.rouge_planets.core.RPBlocks;
 import yaboichips.rouge_planets.core.RPEntities;
 import yaboichips.rouge_planets.network.RougePackets;
 import yaboichips.rouge_planets.network.SendPlayerDataPacket;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static yaboichips.rouge_planets.core.RPBlocks.BLOCKS;
@@ -82,12 +82,9 @@ public class RougePlanets {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static long currentTick = 0;
     private static final Map<Long, Runnable> scheduledTasks = new ConcurrentHashMap<>();
-    public static final Map<UUID, ResourceLocation> playerDimensions = new HashMap<>();
     public static ResourceKey<Level> MINER_DIMENSION = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath(MODID, "miner_dimension"));
 
-
-
-    // Create a Deferred Register to hold Blocks which will all be registered under the "rougeplanets" namespace
+    public Map<Block, RenderType> renderBlocks = new HashMap<>();
 
 
     public RougePlanets() {
@@ -97,7 +94,6 @@ public class RougePlanets {
         ENTITIES.register(modEventBus);
         MENUS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
-        // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
 
@@ -106,8 +102,8 @@ public class RougePlanets {
         modEventBus.addListener(this::bakeLayers);
         modEventBus.addListener(this::registerCapabilities);
         modEventBus.addListener(this::entityAttributes);
-
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        LOGGER.info("Rouge Planets Registered");
     }
 
     public void onCommonSetup(FMLCommonSetupEvent event) {
@@ -128,6 +124,8 @@ public class RougePlanets {
             EntityRenderers.register(RPEntities.RP_MERCHANT.get(), HumanRenderer::new);
             EntityRenderers.register(RPEntities.AUGMENTOR.get(), HumanRenderer::new);
         });
+        renderBlocks.put(RPBlocks.SPACE_TORCH.get(), RenderType.cutout());
+        renderBlocks.forEach(ItemBlockRenderTypes::setRenderLayer);
     }
 
     public void bakeLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
@@ -138,7 +136,6 @@ public class RougePlanets {
         event.put(RPEntities.FORGE_MASTER.get(), HumanMob.createAttributes().build());
         event.put(RPEntities.RP_MERCHANT.get(), HumanMob.createAttributes().build());
         event.put(RPEntities.AUGMENTOR.get(), HumanMob.createAttributes().build());
-
     }
 
     public static void scheduleTask(long tick, Runnable task) {
@@ -148,8 +145,6 @@ public class RougePlanets {
     public static void clearTask() {
         scheduledTasks.clear();
     }
-
-
     @SubscribeEvent
     public void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player player) {
@@ -183,11 +178,9 @@ public class RougePlanets {
                 InfiniverseAPI.get().markDimensionForUnregistration(event.getEntity().getServer(), fromDimension);
             }
         }
-
         if (event.isWasDeath()) {
             event.getOriginal().reviveCaps();
             LazyOptional<PlayerData> loNewCap = event.getOriginal().getCapability(RougeCapabilities.PLAYER_DATA);
-            // loOldCap is never present!
             LazyOptional<PlayerData> loOldCap = event.getOriginal().getCapability(RougeCapabilities.PLAYER_DATA);
             loNewCap.ifPresent(newCap -> {
                 loOldCap.ifPresent(oldCap -> {
@@ -200,14 +193,15 @@ public class RougePlanets {
             });
         }
     }
+
     @SubscribeEvent
-    public void onPlayerChangedDimension(AttackEntityEvent event) {
+    public void onPlayerAttack(AttackEntityEvent event) {
         event.getEntity().getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(playerData -> {
-            if (playerData.isPyrolithActive()){
+            if (playerData.isPyrolithActive()) {
                 event.getTarget().setSecondsOnFire(30);
             }
-            if (playerData.isAzuriumActive()){
-                ((LivingEntity)event.getTarget()).addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
+            if (playerData.isAzuriumActive()) {
+                ((LivingEntity) event.getTarget()).addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
             }
         });
     }
@@ -223,15 +217,28 @@ public class RougePlanets {
             }
         }
     }
+
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side.isClient()) return;
         ServerPlayer player = (ServerPlayer) event.player;
         RougePackets.sendToPlayer(new SendPlayerDataPacket(PlayerDataUtils.getO2(player), PlayerDataUtils.getCredits(player)), player);
-        if (PlayerDataUtils.getO2(player) > 300) {
-            player.kill();
-        }
+        event.player.getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(playerData -> {
+            if (playerData.getAzuriumTimer() > 0) {
+                playerData.setAzuriumTimer(playerData.getAzuriumTimer() - 1);
+            }
+            if (playerData.getPyrolithTimer() > 0) {
+                playerData.setPyrolithTimer(playerData.getPyrolithTimer() - 1);
+            }
+            if (playerData.getElectryteTimer() > 0) {
+                playerData.setElectryteTimer(playerData.getElectryteTimer() - 1);
+            }
+            if (playerData.getChlorosynthTimer() > 0) {
+                playerData.setChlorosynthTimer(playerData.getChlorosynthTimer() - 1);
+            }
+        });
     }
+
 
     @SubscribeEvent
     public void onRenderGuiOverlay(RenderGuiOverlayEvent event) {
@@ -243,21 +250,20 @@ public class RougePlanets {
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
-            return; // Process only END phase to avoid duplication
+            return;
         }
-        // Increment the tick counter
         currentTick++;
-        // Check and execute tasks scheduled for the current tick
         Iterator<Map.Entry<Long, Runnable>> iterator = scheduledTasks.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Long, Runnable> entry = iterator.next();
             if (entry.getKey() <= currentTick) {
                 try {
-                    entry.getValue().run(); // Execute the Runnable
+                    entry.getValue().run();
                 } catch (Exception e) {
-                    e.printStackTrace(); // Log any errors during execution
+                    e.printStackTrace();
+                    LOGGER.info("ROUGE PLANET SERVER EVENT KILLED ITSELF, YELL AT CHIPS");
                 }
-                iterator.remove(); // Remove the task after execution
+                iterator.remove();
             }
         }
     }
@@ -269,7 +275,7 @@ public class RougePlanets {
         if (!mc.player.isLocalPlayer()) return;
 
         // Set the text to render
-        String text = "Value: " + ClientPlayerData.getO2();
+        String text = formatTicksToTime(ClientPlayerData.getO2());
 
         // Determine the position (bottom-left corner)
         int x = 5; // 5 pixels from the left
@@ -279,5 +285,15 @@ public class RougePlanets {
         RenderSystem.enableBlend();
         guiGraphics.drawString(mc.font, text, x, y, 0xFFFFFF); // White color
         RenderSystem.disableBlend();
+    }
+
+    public static String formatTicksToTime(int ticks) {
+        int totalSeconds = ticks / 20;
+
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 }

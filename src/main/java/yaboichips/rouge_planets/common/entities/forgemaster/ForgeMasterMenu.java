@@ -58,12 +58,16 @@ public class ForgeMasterMenu extends AbstractContainerMenu {
         if (!player.level().isClientSide()) {
             ItemStack stack = levelSlot.getItem(0);
             if (!stack.isEmpty() && stack.getItem() instanceof LevelableItem) {
-                if (PlayerDataUtils.getCredits((ServerPlayer) player) >= stack.getTag().getInt("LevelCost")) {
-                    ((LevelableItem) stack.getItem()).levelUp(stack);
-                    PlayerDataUtils.subCredits((ServerPlayer) player, stack.getTag().getInt("LevelCost"));
-                    ((LevelableItem)stack.getItem()).setLevelUpCost(stack, 50 * ((LevelableItem)stack.getItem()).getLevel(stack));
-                }else{
-                    player.sendSystemMessage(Component.literal("You need "+ (stack.getTag().getInt("LevelCost") - PlayerDataUtils.getCredits((ServerPlayer) player) + " more Credits")));
+                if (((LevelableItem) stack.getItem()).getLevel(stack) < 20) {
+                    if (PlayerDataUtils.getCredits((ServerPlayer) player) >= stack.getTag().getInt("LevelCost")) {
+                        ((LevelableItem) stack.getItem()).levelUp(stack);
+                        PlayerDataUtils.subCredits((ServerPlayer) player, stack.getTag().getInt("LevelCost"));
+                        ((LevelableItem) stack.getItem()).setLevelUpCost(stack, 50 * ((LevelableItem) stack.getItem()).getLevel(stack));
+                    } else {
+                        player.sendSystemMessage(Component.literal("You need " + (stack.getTag().getInt("LevelCost") - PlayerDataUtils.getCredits((ServerPlayer) player) + " more Credits")));
+                    }
+                } else {
+                    player.sendSystemMessage(Component.literal("Item is Max Level"));
                 }
             }
         }

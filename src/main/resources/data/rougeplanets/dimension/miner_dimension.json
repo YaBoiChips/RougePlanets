@@ -5,7 +5,7 @@
     "settings": "rougeplanets:miner_dimension",
     "biome_source": {
       "type": "minecraft:fixed",
-      "biome": "minecraft:stony_shore"
+      "biome": "rougeplanets:miner"
     }
   }
 }

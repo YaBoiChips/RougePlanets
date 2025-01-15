@@ -26,7 +26,7 @@ public class AugmentorMenu extends AbstractContainerMenu {
         this.container = container;
         this.player = playerInventory.player;
 
-        this.addSlot(new Slot(augmentableSlot, 0, 80, 26) {
+        this.addSlot(new Slot(augmentableSlot, 0, 120, 44) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return stack.getCapability(RougeCapabilities.AUGMENTABLE).isPresent();
@@ -45,14 +45,22 @@ public class AugmentorMenu extends AbstractContainerMenu {
         });
 
 
+
+        int k;
+        for(k = 0; k < 3; ++k) {
+            for(int j = 0; j < 9; ++j) {
+                this.addSlot(new Slot(playerInventory, j + k * 9 + 9, 48 + j * 18, 142 + k * 18));
+            }
+        }
+
         int slotID = 0;
 
         for (int i = 0; i < 9; i++) {
-            this.addSlot(new Slot(container, slotID, 88 + i * 18, 232));
+            this.addSlot(new Slot(container, slotID, 48 + i * 18, 232));
             slotID++;
         }
         for (int i = 0; i < 4; i++) {
-            this.addSlot(new Slot(container, slotID, 88 + i * 18, 197));
+            this.addSlot(new Slot(container, slotID, 48 + i * 18, 214));
             slotID++;
         }
     }
@@ -76,7 +84,7 @@ public class AugmentorMenu extends AbstractContainerMenu {
             slot.getItem().getCapability(RougeCapabilities.AUGMENTABLE).ifPresent(cap -> {
                 for (int i = 0; i < cap.getAugmentSlots(); i++) {
 //                            checkContainerSize(cap.getAugments(), cap.getAugmentSlots());
-                    Slot dynamicSlot = new Slot(cap.getAugments(), i, 88 + i * 18, 140) {
+                    Slot dynamicSlot = new Slot(cap.getAugments(), i, 102 + i * 18, 94) {
                         @Override
                         public boolean mayPlace(ItemStack stack) {
                             return stack.getItem() instanceof AugmentItem;

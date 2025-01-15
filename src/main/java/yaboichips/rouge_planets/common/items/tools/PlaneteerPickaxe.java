@@ -37,12 +37,12 @@ public class PlaneteerPickaxe extends PickaxeItem implements LevelableItem, Slot
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return Math.round(super.getDestroySpeed(stack, state) * Math.pow(1 + 0.07, getLevel(stack)));
+        return Math.round(super.getDestroySpeed(stack, state) * Math.pow(1 + 0.1, getLevel(stack)));
     }
 
     @Override
     public int getMaxDamage(ItemStack stack) {
-        return (int) Math.round((50 * Math.pow(1 + 0.07, getLevel(stack))));
+        return (int) Math.round((50 * Math.pow(1 + 0.1, getLevel(stack))));
     }
 
     @Override

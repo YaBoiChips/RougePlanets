@@ -10,6 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 import yaboichips.rouge_planets.common.items.*;
 import yaboichips.rouge_planets.common.items.augments.AugmentItem;
 import yaboichips.rouge_planets.common.items.augments.AugmentType;
+import yaboichips.rouge_planets.common.items.crystals.Azurium;
 import yaboichips.rouge_planets.common.items.crystals.Electryte;
 import yaboichips.rouge_planets.common.items.crystals.Chlorosynth;
 import yaboichips.rouge_planets.common.items.crystals.Pyrolith;
@@ -61,8 +62,8 @@ public class RPItems {
     //Crystals
     public static final RegistryObject<Item> PYROLITH = ITEMS.register("pyrolith", Pyrolith::new);
     public static final RegistryObject<Item> ELECTRYTE = ITEMS.register("electryte", Electryte::new);
-
     public static final RegistryObject<Item> CHLOROSYNTH = ITEMS.register("chlorosynth", Chlorosynth::new);
+    public static final RegistryObject<Item> AZURIUM = ITEMS.register("azurium", Azurium::new);
 
 
 

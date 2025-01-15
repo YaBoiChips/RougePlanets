@@ -14,7 +14,7 @@ import yaboichips.rouge_planets.network.SendItemsToSlotPacket;
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 
 public class AugmentorScreen extends AbstractContainerScreen<AugmentorMenu> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(MODID, "textures/gui/merchant.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(MODID, "textures/gui/augmentor.png");
     private final AugmentorMenu menu;
 
     public AugmentorScreen(AugmentorMenu menu, Inventory inventory, Component title) {
@@ -32,7 +32,7 @@ public class AugmentorScreen extends AbstractContainerScreen<AugmentorMenu> {
         this.addRenderableWidget(Button.builder(Component.literal("Apply Augment"), button -> {
             RougePackets.CHANNEL.sendToServer(new ApplyAugmentPacket());
             this.minecraft.player.closeContainer();
-        }).bounds(x + 60, y + 60, 60, 20).build());
+        }).bounds(x + 82, y + 66, 90, 20).build());
     }
 
     @Override

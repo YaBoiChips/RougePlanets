@@ -8,11 +8,6 @@ public class PlayerData {
     public int credits;
     public int o2;
 
-    private boolean pyrolithActive;
-    private boolean azuriumActive;
-    private boolean electryteActive;
-    private boolean chlorosynthActive;
-
     private int pyrolithTimer;
     private int azuriumTimer;
     private int electryteTimer;
@@ -115,11 +110,6 @@ public class PlayerData {
         tag.putInt("AzuriumTimer", getAzuriumTimer());
         tag.putInt("ElectryteTimer", getElectryteTimer());
         tag.putInt("ChlorosynthTimer", getChlorosynthTimer());
-        tag.putBoolean("Pyrolith", isPyrolithActive());
-        tag.putBoolean("Azurium", isAzuriumActive());
-        tag.putBoolean("Electryte", isElectryteActive());
-        tag.putBoolean("Chlorosynth", isChlorosynthActive());
-
     }
 
 
@@ -148,50 +138,22 @@ public class PlayerData {
         if (tag.contains("ElectryteTimer")) {
             this.setElectryteTimer(tag.getInt("ElectryteTimer"));
         }
-        if (tag.contains("Pyrolith")) {
-            this.setPyrolithActive(tag.getBoolean("Pyrolith"));
-        }
-        if (tag.contains("Azurium")) {
-            this.setAzuriumActive(tag.getBoolean("Azurium"));
-        }
-        if (tag.contains("Electryte")) {
-            this.setElectryteActive(tag.getBoolean("Electryte"));
-        }
-        if (tag.contains("Chlorosynth")) {
-            this.setChlorosynthActive(tag.getBoolean("Chlorosynth"));
-        }
     }
 
     public boolean isPyrolithActive() {
-        return pyrolithActive;
-    }
-
-    public void setPyrolithActive(boolean pyrolithActive) {
-        this.pyrolithActive = pyrolithActive;
+        return getPyrolithTimer() > 0;
     }
 
     public boolean isAzuriumActive() {
-        return azuriumActive;
-    }
-
-    public void setAzuriumActive(boolean azuriumActive) {
-        this.azuriumActive = azuriumActive;
+        return getAzuriumTimer() > 0;
     }
 
     public boolean isElectryteActive() {
-        return electryteActive;
-    }
-
-    public void setElectryteActive(boolean electryteActive) {
-        this.electryteActive = electryteActive;
+        return getElectryteTimer() > 0;
     }
 
     public boolean isChlorosynthActive() {
-        return chlorosynthActive;
-    }
-
-    public void setChlorosynthActive(boolean chlorosynthActive) {
-        this.chlorosynthActive = chlorosynthActive;
+        return getChlorosynthTimer() > 1;
     }
 
     public int getPyrolithTimer() {

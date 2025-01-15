@@ -24,7 +24,6 @@ public class Chlorosynth extends Item {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         player.getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(playerData -> {
-            playerData.setChlorosynthActive(true);
             playerData.setChlorosynthTimer(30 * 20);
         });
         player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 60 * 20, 1));
@@ -34,6 +33,7 @@ public class Chlorosynth extends Item {
         level.addParticle(ParticleTypes.ELECTRIC_SPARK, player.getX(), player.getY(), player.getZ(), 0, 0, 0);
         level.playSound(player, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS);
         player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
+        stack.shrink(1);
         return InteractionResultHolder.consume(stack);
 
     }

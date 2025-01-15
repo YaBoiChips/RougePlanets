@@ -31,15 +31,16 @@ public class Electryte extends Item {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         player.getCapability(RougeCapabilities.PLAYER_DATA).ifPresent(playerData -> {
-            playerData.setElectryteActive(true);
-            playerData.setElectryteTimer(30);
+            playerData.setElectryteTimer(30 * 20);
         });
         for (int step = 1; step <= STEPS; step++) {
             double radius = (MAX_RADIUS / STEPS) * step;
             sendZapParticles(level, player, radius);
             applyZapAndDamageToEntities(level, player, radius);
         }
-        player.getCooldowns().addCooldown(stack.getItem(), 30);
+        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 30 * 20, 2));
+        player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
+        stack.shrink(1);
         return InteractionResultHolder.consume(stack);
 
     }

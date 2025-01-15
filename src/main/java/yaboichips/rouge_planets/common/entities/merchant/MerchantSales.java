@@ -31,8 +31,6 @@ public class MerchantSales {
     public static final MerchantSales JERKY = register(new MerchantSales(RPItems.JERKY.get().getDefaultInstance(), 3));
     public static final MerchantSales SPACE_TORCH = register(new MerchantSales(RPItems.SPACE_TORCH.get().getDefaultInstance(), 3));
     public static final MerchantSales MAGAZINE = register(new MerchantSales(RPItems.MAGAZINE.get().getDefaultInstance(), 10));
-    public static final MerchantSales AUGMENT = register(new MerchantSales(RPItems.TEST_AUGMENT.get().getDefaultInstance(), 100));
-
 
 
     public static MerchantSales register(MerchantSales sale){

@@ -96,7 +96,6 @@ public class RougePlanets {
         CREATIVE_MODE_TABS.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
 
-
         modEventBus.addListener(this::onClientSetup);
         modEventBus.addListener(this::onCommonSetup);
         modEventBus.addListener(this::bakeLayers);
@@ -145,6 +144,7 @@ public class RougePlanets {
     public static void clearTask() {
         scheduledTasks.clear();
     }
+
     @SubscribeEvent
     public void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player player) {
@@ -189,6 +189,7 @@ public class RougePlanets {
                     PlayerDataUtils.setCredits((ServerPlayer) event.getEntity(), oldCap.getCredits());
                     PlayerDataUtils.setInitiated((ServerPlayer) event.getEntity(), oldCap.getIsInitiated());
                     PlayerDataUtils.setPlanetContainer((ServerPlayer) event.getEntity(), oldCap.getPlanetContainer());
+                    PlayerDataUtils.setArmorContainer((ServerPlayer) event.getEntity(), oldCap.getArmorContainer());
                 });
             });
         }
@@ -271,20 +272,20 @@ public class RougePlanets {
     private void renderIntOnHud(GuiGraphics guiGraphics) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
-
         if (!mc.player.isLocalPlayer()) return;
+        if (mc.player.level().dimension().location().getPath().contains("planet")) {
+            // Set the text to render
+            String text = formatTicksToTime(ClientPlayerData.getO2());
 
-        // Set the text to render
-        String text = formatTicksToTime(ClientPlayerData.getO2());
+            // Determine the position (bottom-left corner)
+            int x = 5; // 5 pixels from the left
+            int y = mc.getWindow().getGuiScaledHeight() - 15; // 15 pixels from the bottom
 
-        // Determine the position (bottom-left corner)
-        int x = 5; // 5 pixels from the left
-        int y = mc.getWindow().getGuiScaledHeight() - 15; // 15 pixels from the bottom
-
-        // Draw the text
-        RenderSystem.enableBlend();
-        guiGraphics.drawString(mc.font, text, x, y, 0xFFFFFF); // White color
-        RenderSystem.disableBlend();
+            // Draw the text
+            RenderSystem.enableBlend();
+            guiGraphics.drawString(mc.font, text, x, y, 0xFFFFFF); // White color
+            RenderSystem.disableBlend();
+        }
     }
 
     public static String formatTicksToTime(int ticks) {
@@ -296,4 +297,5 @@ public class RougePlanets {
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
+
 }

@@ -4,6 +4,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -42,7 +43,7 @@ public class RPItems {
 
     //Tools & Armor
     public static final RegistryObject<Item> PLANETEER_PICKAXE = ITEMS.register("planeteer_pickaxe", PlaneteerPickaxe::new);
-    public static final RegistryObject<Item> TESTARMOR = ITEMS.register("test",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.HELMET, new Item.Properties(), 9));
+    public static final RegistryObject<Item> TESTARMOR = ITEMS.register("test",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.HELMET, new Item.Properties(), 0));
 
     // Utility Items
     public static final RegistryObject<Item> ROPE = ITEMS.register("rope",() -> new RopeBlockItem(RPBlocks.ROPE.get(), new Item.Properties()));
@@ -72,6 +73,24 @@ public class RPItems {
     public static final RegistryObject<Item> ELECTRYTE_BLOCK = ITEMS.register("electryte_block", ()-> new BlockItem(RPBlocks.ELECTRYTE_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<Item> CHLOROSYNTH_BLOCK = ITEMS.register("chlorosynth_block", ()-> new BlockItem(RPBlocks.CHLOROSYNTH_BLOCK.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> DEEPSLATE_RUBY_ORE = ITEMS.register("deepslate_ruby_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_RUBY_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DEEPSLATE_SAPPHIRE_ORE = ITEMS.register("deepslate_sapphire_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_SAPPHIRE_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DEEPSLATE_TOPAZ_ORE = ITEMS.register("deepslate_topaz_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_TOPAZ_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DEEPSLATE_OPAL_ORE = ITEMS.register("deepslate_opal_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_OPAL_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DEEPSLATE_AMBER_ORE = ITEMS.register("deepslate_amber_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_AMBER_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DEEPSLATE_ONYX_ORE = ITEMS.register("deepslate_onyx_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_ONYX_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DEEPSLATE_PYRITE_ORE = ITEMS.register("deepslate_pyrite_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_PYRITE_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DEEPSLATE_THALLIUM_ORE = ITEMS.register("deepslate_thallium_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_THALLIUM_ORE.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> RUBY_ORE = ITEMS.register("ruby_ore", ()-> new BlockItem(RPBlocks.RUBY_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> SAPPHIRE_ORE = ITEMS.register("sapphire_ore", ()-> new BlockItem(RPBlocks.SAPPHIRE_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> TOPAZ_ORE = ITEMS.register("topaz_ore", ()-> new BlockItem(RPBlocks.TOPAZ_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> OPAL_ORE = ITEMS.register("opal_ore", ()-> new BlockItem(RPBlocks.OPAL_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> AMBER_ORE = ITEMS.register("amber_ore", ()-> new BlockItem(RPBlocks.AMBER_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> ONYX_ORE = ITEMS.register("onyx_ore", ()-> new BlockItem(RPBlocks.ONYX_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> PYRITE_ORE = ITEMS.register("pyrite_ore", ()-> new BlockItem(RPBlocks.PYRITE_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> THALLIUM_ORE = ITEMS.register("thallium_ore", ()-> new BlockItem(RPBlocks.THALLIUM_ORE.get(), new Item.Properties()));
+    
     public static final RegistryObject<Item> TP = ITEMS.register("tp", ()-> new BlockItem(RPBlocks.TP.get(), new Item.Properties()));
 
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("rp_tab", () -> CreativeModeTab.builder()

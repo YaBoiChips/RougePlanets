@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -27,6 +28,9 @@ import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import yaboichips.rouge_planets.RougePlanets;
+import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
+import yaboichips.rouge_planets.common.containers.PlanetInventoryContainer;
+import yaboichips.rouge_planets.common.containers.SaveableSimpleContainer;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 
@@ -38,10 +42,18 @@ public class TeleporterBlock extends Block {
     @Override
     public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (player instanceof ServerPlayer serverPlayer) {
-            ServerLevel world = InfiniverseAPI.get().getOrCreateLevel(serverPlayer.server, ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath(MODID, player.getStringUUID() + "planet" + level.random.nextInt())), () -> getWorldSettings(serverPlayer.serverLevel()));
-            serverPlayer.teleportTo(world, 0, 45,0,0,0);
+            if (serverPlayer.level().dimension() == Level.OVERWORLD) {
+                ServerLevel world = InfiniverseAPI.get().getOrCreateLevel(serverPlayer.server, ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath(MODID, player.getStringUUID() + "planet" + level.random.nextInt())), () -> getWorldSettings(serverPlayer.serverLevel()));
+                PlayerDataUtils.setSavedInventory(serverPlayer, new SaveableSimpleContainer(player.getInventory()));
+                loadInventoryFromCapability(serverPlayer, PlayerDataUtils.getPlanetContainer(serverPlayer));
+                serverPlayer.teleportTo(world, 0, 45, 0, 0, 0);
+            } else {
+                serverPlayer.teleportTo(serverPlayer.getServer().getLevel(Level.OVERWORLD), 1, 100, 0, 0, 0);
+                PlayerDataUtils.setPlanetContainer(serverPlayer, new PlanetInventoryContainer(player.getInventory()));
+                loadInventoryFromCapability(serverPlayer, PlayerDataUtils.getSavedInventory(serverPlayer));
+            }
         }
-        return super.use(state, level, pos, player, hand, result);
+        return InteractionResult.SUCCESS;
     }
 
     public LevelStem getWorldSettings(ServerLevel serverLevel) {
@@ -57,5 +69,17 @@ public class TeleporterBlock extends Block {
                 });
         Holder<DimensionType> typeHolder = oldLevel.dimensionTypeRegistration();
         return new LevelStem(typeHolder, newChunkGenerator);
+    }
+
+    private void loadInventoryFromCapability(ServerPlayer player, PlanetInventoryContainer cap) {
+        for (int i = 0; i < cap.getItems().size(); i++) {
+            player.getInventory().setItem(i, cap.getItems().get(i).copy());
+        }
+    }
+
+    private void loadInventoryFromCapability(ServerPlayer player, SaveableSimpleContainer cap) {
+        for (int i = 0; i < cap.getContainerSize(); i++) {
+            player.getInventory().load(cap.createTag());
+        }
     }
 }

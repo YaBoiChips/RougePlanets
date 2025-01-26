@@ -20,7 +20,6 @@ import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 import java.util.List;
 
 public class ExplorerSuit extends ArmorItem implements LevelableItem, SlotableItem {
-
     private final int slot;
 
     public ExplorerSuit(ArmorMaterial p_40386_, Type p_266831_, Properties p_40388_, int slot) {

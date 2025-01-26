@@ -17,8 +17,8 @@ public class ForgeMasterScreen extends AbstractContainerScreen<ForgeMasterMenu> 
 
     public ForgeMasterScreen(ForgeMasterMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
-        this.imageWidth = 176;
-        this.imageHeight = 166;
+        this.imageWidth = 256;
+        this.imageHeight = 256;
         this.menu = menu;
     }
 
@@ -29,7 +29,7 @@ public class ForgeMasterScreen extends AbstractContainerScreen<ForgeMasterMenu> 
         int y = (this.height - this.imageHeight) / 2;
         this.addRenderableWidget(Button.builder(Component.literal("Level Up"), button -> {
             RougePackets.CHANNEL.sendToServer(new LevelUpItemPacket());
-        }).bounds(x + 60, y + 60, 60, 20).build());
+        }).bounds(x + 96 , y + 70, 60, 20).build());
     }
 
 
@@ -42,7 +42,7 @@ public class ForgeMasterScreen extends AbstractContainerScreen<ForgeMasterMenu> 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
+        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY + 58, 4210752, false);
     }
 
     @Override

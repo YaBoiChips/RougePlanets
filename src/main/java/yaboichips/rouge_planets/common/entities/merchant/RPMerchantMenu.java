@@ -22,7 +22,7 @@ public class RPMerchantMenu extends AbstractContainerMenu {
 
     public RPMerchantMenu(int id, Inventory playerInventory, Container container) {
         super(RPMenus.MERCHANT_MENU.get(), id);
-        checkContainerSize(container, 13);
+        checkContainerSize(container, 36);
         this.container = container;
         this.player = playerInventory.player;
         int slotID = 0;
@@ -39,7 +39,7 @@ public class RPMerchantMenu extends AbstractContainerMenu {
 
 
     public RPMerchantMenu(int i, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
-        this(i, inventory, new SimpleContainer(13));
+        this(i, inventory, new SimpleContainer(36));
     }
 
 

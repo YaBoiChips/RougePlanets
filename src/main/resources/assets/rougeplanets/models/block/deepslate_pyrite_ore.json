@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "rougeplanets:block/deepslate_pyrite_ore"
+  }
+}

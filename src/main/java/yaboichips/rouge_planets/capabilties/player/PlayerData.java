@@ -1,7 +1,13 @@
 package yaboichips.rouge_planets.capabilties.player;
 
 import net.minecraft.nbt.CompoundTag;
-import yaboichips.rouge_planets.client.PlanetInventoryContainer;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import yaboichips.rouge_planets.common.containers.PlanetArmorContainer;
+import yaboichips.rouge_planets.common.containers.PlanetInventoryContainer;
+import yaboichips.rouge_planets.common.containers.SaveableSimpleContainer;
 
 public class PlayerData {
     public boolean isInitiated;
@@ -14,11 +20,15 @@ public class PlayerData {
     private int chlorosynthTimer;
 
 
-
     public PlanetInventoryContainer planetInventory;
+    private PlanetArmorContainer armorContainer;
+    private SaveableSimpleContainer playerInventory;
+
 
     public PlayerData() {
         this.planetInventory = new PlanetInventoryContainer();
+        this.armorContainer = new PlanetArmorContainer();
+        this.playerInventory = new SaveableSimpleContainer(36);
     }
 
 
@@ -26,9 +36,25 @@ public class PlayerData {
         return this.planetInventory;
     }
 
+    public PlanetArmorContainer getArmorContainer() {
+        return armorContainer;
+    }
+
+    public void setArmorContainer(PlanetArmorContainer armorContainer) {
+        this.armorContainer = armorContainer;
+    }
+
 
     public void setPlanetContainer(PlanetInventoryContainer container) {
         this.planetInventory = container;
+    }
+
+    public SaveableSimpleContainer getSavedInventory() {
+        return playerInventory;
+    }
+
+    public void setSavedInventory(SaveableSimpleContainer playerInventory) {
+        this.playerInventory = playerInventory;
     }
 
 
@@ -103,6 +129,8 @@ public class PlayerData {
 
     public void serializeNBT(CompoundTag tag) {
         tag.put("PlanetInventory", this.planetInventory.createTag());
+        tag.put("ArmorPlanetInventory", this.armorContainer.createTag());
+        tag.put("SavedPlayerInventory", createTag(playerInventory));
         tag.putBoolean("Initiated", getIsInitiated());
         tag.putInt("Credits", getCredits());
         tag.putInt("O2", getCredits());
@@ -116,6 +144,12 @@ public class PlayerData {
     public void deserializeNBT(CompoundTag tag) {
         if (tag.contains("PlanetInventory")) {
             this.planetInventory.fromTag(tag.getList("PlanetInventory", 10));
+        }
+        if (tag.contains("ArmorPlanetInventory")) {
+            this.armorContainer.fromTag(tag.getList("ArmorPlanetInventory", 10));
+        }
+        if (tag.contains("SavedPlayerInventory")) {
+            fromTag(tag.getList("SavedPlayerInventory", 10), this.playerInventory);
         }
         if (tag.contains("Initiated")) {
             this.setIsInitiated(tag.getBoolean("Initiated"));
@@ -187,4 +221,35 @@ public class PlayerData {
     public void setChlorosynthTimer(int chlorosynthTimer) {
         this.chlorosynthTimer = chlorosynthTimer;
     }
+
+    public void fromTag(ListTag p_40108_, Container container) {
+        for (int i = 0; i < container.getContainerSize(); ++i) {
+            container.setItem(i, ItemStack.EMPTY);
+        }
+
+        for (int k = 0; k < p_40108_.size(); ++k) {
+            CompoundTag compoundtag = p_40108_.getCompound(k);
+            int j = compoundtag.getByte("Slot") & 255;
+            if (j >= 0 && j < container.getContainerSize()) {
+                container.setItem(j, ItemStack.of(compoundtag));
+            }
+        }
+    }
+
+    public ListTag createTag(Container container) {
+        ListTag listtag = new ListTag();
+
+        for (int i = 0; i < container.getContainerSize(); ++i) {
+            ItemStack itemstack = container.getItem(i);
+            if (!itemstack.isEmpty()) {
+                CompoundTag compoundtag = new CompoundTag();
+                compoundtag.putByte("Slot", (byte) i);
+                itemstack.save(compoundtag);
+                listtag.add(compoundtag);
+            }
+        }
+
+        return listtag;
+    }
+
 }

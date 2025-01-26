@@ -22,17 +22,30 @@ public class ForgeMasterMenu extends AbstractContainerMenu {
 
     private final SimpleContainer levelSlot = new SimpleContainer(1);
 
-    public ForgeMasterMenu(int id, Inventory playerInventory, Container container) {
+    public ForgeMasterMenu(int id, Inventory playerInventory, Container container, Container armor) {
         super(RPMenus.FORGE_MASTER_MENU.get(), id);
-        checkContainerSize(container, 13);
+        checkContainerSize(container, 36);
         checkContainerSize(levelSlot, 1);
+        checkContainerSize(armor, 4);
         this.container = container;
         this.player = playerInventory.player;
 
-        this.addSlot(new Slot(levelSlot, 0, 80, 26));
+        this.addSlot(new Slot(levelSlot, 0, 120, 42));
 
-        for (int i = 0; i < 13; i++) {
-            this.addSlot(new Slot(container, i, 8 + (i % 9) * 18, 84 + (i / 9) * 18));
+        int slotID = 0;
+
+        for (int i = 0; i < 9; i++) {
+            this.addSlot(new Slot(container, slotID, 48 + i * 18, 222));
+            slotID++;
+        }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                this.addSlot(new Slot(container, slotID, 48 + j * 18, 164 + i * 18));
+                slotID++;
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            this.addSlot(new Slot(armor, i, 48 + i * 18, 141));
         }
     }
 
@@ -41,7 +54,15 @@ public class ForgeMasterMenu extends AbstractContainerMenu {
     }
 
     public ForgeMasterMenu(int i, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
-        this(i, inventory, new SimpleContainer(13));
+        this(i, inventory, new SimpleContainer(36), new SimpleContainer(4));
+    }
+
+    @Override
+    public void removed(Player p_38940_) {
+        if (container instanceof SimpleContainer simpleContainer) {
+            simpleContainer.addItem(levelSlot.getItem(0));
+        }
+        super.removed(p_38940_);
     }
 
     @Override

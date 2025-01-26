@@ -9,13 +9,9 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
-import yaboichips.rouge_planets.client.PlanetInventoryContainer;
 import yaboichips.rouge_planets.common.entities.HumanMob;
-import yaboichips.rouge_planets.common.items.LevelableItem;
-import yaboichips.rouge_planets.core.RPItems;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 
@@ -30,7 +26,7 @@ public class Augmentor extends HumanMob {
                 if (!PlayerDataUtils.getIsInitiated(player)) {
                     player.sendSystemMessage(Component.literal("Who are you? I only talk to qualified personal!"));
                 } else if (hand == InteractionHand.MAIN_HAND) {
-                    player.openMenu(new SimpleMenuProvider((id, playerInv, container) -> new AugmentorMenu(id, playerInv, PlayerDataUtils.getPlanetContainer(player)), Component.literal("Forge Master")));
+                    player.openMenu(new SimpleMenuProvider((id, playerInv, container) -> new AugmentorMenu(id, playerInv, PlayerDataUtils.getPlanetContainer(player), PlayerDataUtils.getArmorContainer(player)), Component.literal("Forge Master")));
                     return InteractionResult.SUCCESS;
                 }
             }

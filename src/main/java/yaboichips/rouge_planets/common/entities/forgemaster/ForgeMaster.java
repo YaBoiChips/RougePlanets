@@ -12,7 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
-import yaboichips.rouge_planets.client.PlanetInventoryContainer;
+import yaboichips.rouge_planets.common.containers.PlanetArmorContainer;
+import yaboichips.rouge_planets.common.containers.PlanetInventoryContainer;
 import yaboichips.rouge_planets.common.entities.HumanMob;
 import yaboichips.rouge_planets.common.items.SlotableItem;
 import yaboichips.rouge_planets.core.RPItems;
@@ -35,10 +36,12 @@ public class ForgeMaster extends HumanMob {
                 if (!PlayerDataUtils.getIsInitiated(player)) {
                     player.sendSystemMessage(Component.literal("Initiated"));
                     PlayerDataUtils.setPlanetContainer(player, new PlanetInventoryContainer());
+                    PlayerDataUtils.setArmorContainer(player, new PlanetArmorContainer());
                     PlayerDataUtils.setInitiated(player, true);
                     defaultItems().forEach(item -> PlayerDataUtils.getPlanetContainer(player).setItem(((SlotableItem) item).getSlot(), item.getDefaultInstance()));
+                    armor().forEach(item -> PlayerDataUtils.getArmorContainer(player).setItem(((SlotableItem) item).getSlot(), item.getDefaultInstance()));
                 } else if (hand == InteractionHand.MAIN_HAND) {
-                    player.openMenu(new SimpleMenuProvider((id, playerInv, container) -> new ForgeMasterMenu(id, playerInv, PlayerDataUtils.getPlanetContainer(player)), Component.literal("Forge Master")));
+                    player.openMenu(new SimpleMenuProvider((id, playerInv, container) -> new ForgeMasterMenu(id, playerInv, PlayerDataUtils.getPlanetContainer(player), PlayerDataUtils.getArmorContainer(player)), Component.literal("Forge Master")));
                     return InteractionResult.SUCCESS;
                 }
             }
@@ -49,6 +52,10 @@ public class ForgeMaster extends HumanMob {
     private List<Item> defaultItems() {
         List<Item> items = new ArrayList<>();
         items.add(RPItems.PLANETEER_PICKAXE.get());
+        return items;
+    }
+    private List<Item> armor() {
+        List<Item> items = new ArrayList<>();
         items.add(RPItems.TESTARMOR.get());
         return items;
     }

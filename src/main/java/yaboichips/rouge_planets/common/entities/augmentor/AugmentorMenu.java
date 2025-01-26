@@ -19,9 +19,10 @@ public class AugmentorMenu extends AbstractContainerMenu {
     public Player player;
     private final SimpleContainer augmentableSlot = new SimpleContainer(1);
 
-    public AugmentorMenu(int id, Inventory playerInventory, Container container) {
+    public AugmentorMenu(int id, Inventory playerInventory, Container container, Container armor) {
         super(RPMenus.AUGMENTOR_MENU.get(), id);
-        checkContainerSize(container, 13);
+        checkContainerSize(container, 36);
+        checkContainerSize(armor, 4);
         checkContainerSize(augmentableSlot, 1);
         this.container = container;
         this.player = playerInventory.player;
@@ -44,11 +45,9 @@ public class AugmentorMenu extends AbstractContainerMenu {
             }
         });
 
-
-
         int k;
-        for(k = 0; k < 3; ++k) {
-            for(int j = 0; j < 9; ++j) {
+        for (k = 0; k < 3; ++k) {
+            for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(playerInventory, j + k * 9 + 9, 48 + j * 18, 142 + k * 18));
             }
         }
@@ -60,7 +59,7 @@ public class AugmentorMenu extends AbstractContainerMenu {
             slotID++;
         }
         for (int i = 0; i < 4; i++) {
-            this.addSlot(new Slot(container, slotID, 48 + i * 18, 214));
+            this.addSlot(new Slot(armor, i, 48 + i * 18, 214));
             slotID++;
         }
     }
@@ -70,12 +69,12 @@ public class AugmentorMenu extends AbstractContainerMenu {
     }
 
     public AugmentorMenu(int i, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
-        this(i, inventory, new SimpleContainer(13));
+        this(i, inventory, new SimpleContainer(36), new SimpleContainer(4));
     }
 
-    public void onClose(){
+    public void onClose() {
         ItemStack stack = augmentableSlot.getItem(0);
-        container.setItem(((SlotableItem)stack.getItem()).getSlot(), stack);
+        container.setItem(((SlotableItem) stack.getItem()).getSlot(), stack);
     }
 
 
@@ -96,9 +95,9 @@ public class AugmentorMenu extends AbstractContainerMenu {
         }
     }
 
-    public void applyAugment(){
+    public void applyAugment() {
         ItemStack stack = augmentableSlot.getItem(0);
-        if (stack.getItem() instanceof SlotableItem item){
+        if (stack.getItem() instanceof SlotableItem item) {
             container.setItem(item.getSlot(), stack);
         }
     }

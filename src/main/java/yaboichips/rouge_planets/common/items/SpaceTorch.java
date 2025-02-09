@@ -6,13 +6,8 @@ import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 
-public class SpaceTorch extends TorchBlock implements SlotableItem {
+public class SpaceTorch extends TorchBlock {
     public SpaceTorch() {
         super(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel((light) -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY), ParticleTypes.FLAME);
-    }
-
-    @Override
-    public int getSlot() {
-        return 8;
     }
 }

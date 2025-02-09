@@ -4,7 +4,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -18,6 +17,7 @@ import yaboichips.rouge_planets.common.items.crystals.Pyrolith;
 import yaboichips.rouge_planets.common.items.tools.PlaneteerPickaxe;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
+import static yaboichips.rouge_planets.core.RPBlocks.CANON_CONTROLLER;
 
 public class RPItems {
 
@@ -27,7 +27,7 @@ public class RPItems {
 
 
 //    public static final RegistryObject<Item> TELEPORTER_BLOCK_ITEM = ITEMS.register("teleporter_block", () -> new BlockItem(TELEPORTER_BLOCK.get(), new Item.Properties()));
-//    public static final RegistryObject<Item> CANON_CONTROLLER_BLOCK_ITEM = ITEMS.register("canon_controller", () -> new BlockItem(CANON_CONTROLLER.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CANON_CONTROLLER_BLOCK_ITEM = ITEMS.register("canon_controller", () -> new BlockItem(CANON_CONTROLLER.get(), new Item.Properties()));
 
     //Raw Materials
     public static final RegistryObject<Item> RUBY = ITEMS.register("ruby",() -> new Item(new Item.Properties()));
@@ -43,13 +43,17 @@ public class RPItems {
 
     //Tools & Armor
     public static final RegistryObject<Item> PLANETEER_PICKAXE = ITEMS.register("planeteer_pickaxe", PlaneteerPickaxe::new);
-    public static final RegistryObject<Item> TESTARMOR = ITEMS.register("test",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.HELMET, new Item.Properties(), 0));
+    public static final RegistryObject<Item> PLANETEER_HELMET = ITEMS.register("planeteer_helmet",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.HELMET, new Item.Properties(), 0));
+    public static final RegistryObject<Item> PLANETEER_CHESTPLATE = ITEMS.register("planeteer_chestplate",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.CHESTPLATE, new Item.Properties(), 1));
+    public static final RegistryObject<Item> PLANETEER_LEGGINGS = ITEMS.register("planeteer_leggings",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.LEGGINGS, new Item.Properties(), 2));
+    public static final RegistryObject<Item> PLANETEER_BOOTS = ITEMS.register("planeteer_boots",() -> new ExplorerSuit(ArmorMaterials.GOLD, ArmorItem.Type.BOOTS, new Item.Properties(), 3));
+
 
     // Utility Items
     public static final RegistryObject<Item> ROPE = ITEMS.register("rope",() -> new RopeBlockItem(RPBlocks.ROPE.get(), new Item.Properties()));
     public static final RegistryObject<Item> SPACE_TORCH = ITEMS.register("space_torch",() -> new BlockItem(RPBlocks.SPACE_TORCH.get(), new Item.Properties()));
-    public static final RegistryObject<Item> JERKY = ITEMS.register("jerky", () -> new SimpleSlotableItem(new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(3).saturationMod(3).build()), 8));
-    public static final RegistryObject<Item> MAGAZINE = ITEMS.register("ammo", () -> new SimpleSlotableItem(new Item.Properties(), 7));
+    public static final RegistryObject<Item> JERKY = ITEMS.register("jerky", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(3).saturationMod(3).build())));
+    public static final RegistryObject<Item> MAGAZINE = ITEMS.register("ammo", () -> new Item(new Item.Properties()));
 
 
     public static final RegistryObject<Item> TEST_AUGMENT = ITEMS.register("test_augment", () -> new AugmentItem(AugmentType.HASTE));

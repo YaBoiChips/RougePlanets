@@ -1,7 +1,6 @@
 package yaboichips.rouge_planets.common.entities.augmentor;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -9,17 +8,16 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import yaboichips.rouge_planets.capabilties.RougeCapabilities;
-import yaboichips.rouge_planets.common.items.SlotableItem;
 import yaboichips.rouge_planets.common.items.augments.AugmentItem;
 import yaboichips.rouge_planets.core.RPMenus;
 
 public class AugmentorMenu extends AbstractContainerMenu {
-    private Container container;
+    private SimpleContainer container;
 
     public Player player;
     private final SimpleContainer augmentableSlot = new SimpleContainer(1);
 
-    public AugmentorMenu(int id, Inventory playerInventory, Container container, Container armor) {
+    public AugmentorMenu(int id, Inventory playerInventory, SimpleContainer container, SimpleContainer armor) {
         super(RPMenus.AUGMENTOR_MENU.get(), id);
         checkContainerSize(container, 36);
         checkContainerSize(armor, 4);
@@ -74,7 +72,7 @@ public class AugmentorMenu extends AbstractContainerMenu {
 
     public void onClose() {
         ItemStack stack = augmentableSlot.getItem(0);
-        container.setItem(((SlotableItem) stack.getItem()).getSlot(), stack);
+        container.addItem(stack);
     }
 
 
@@ -97,9 +95,7 @@ public class AugmentorMenu extends AbstractContainerMenu {
 
     public void applyAugment() {
         ItemStack stack = augmentableSlot.getItem(0);
-        if (stack.getItem() instanceof SlotableItem item) {
-            container.setItem(item.getSlot(), stack);
-        }
+        container.addItem(stack);
     }
 
 

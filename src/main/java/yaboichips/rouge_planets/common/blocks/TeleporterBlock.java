@@ -39,6 +39,7 @@ public class TeleporterBlock extends Block {
         super(p_49795_);
     }
 
+    //TODO add armor changing and move all this crap to the canon
     @Override
     public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (player instanceof ServerPlayer serverPlayer) {

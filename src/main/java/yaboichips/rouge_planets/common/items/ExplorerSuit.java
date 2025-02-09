@@ -19,7 +19,7 @@ import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 
 import java.util.List;
 
-public class ExplorerSuit extends ArmorItem implements LevelableItem, SlotableItem {
+public class ExplorerSuit extends ArmorItem implements LevelableItem{
     private final int slot;
 
     public ExplorerSuit(ArmorMaterial p_40386_, Type p_266831_, Properties p_40388_, int slot) {
@@ -37,11 +37,6 @@ public class ExplorerSuit extends ArmorItem implements LevelableItem, SlotableIt
         CompoundTag tag = stack.getTag();
         tag.putInt("Level", getLevel(stack));
         stack.setTag(tag);
-    }
-
-    @Override
-    public int getSlot() {
-        return slot;
     }
 
     @Override
@@ -102,6 +97,4 @@ public class ExplorerSuit extends ArmorItem implements LevelableItem, SlotableIt
             padding.deserializeNBT(tag);
         }
     }
-
-
 }

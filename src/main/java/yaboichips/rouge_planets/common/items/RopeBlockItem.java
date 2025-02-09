@@ -16,7 +16,7 @@ import yaboichips.rouge_planets.RougePlanets;
 
 import static yaboichips.rouge_planets.RougePlanets.clearTask;
 
-public class RopeBlockItem extends BlockItem implements SlotableItem {
+public class RopeBlockItem extends BlockItem {
     public RopeBlockItem(Block p_40565_, Properties p_40566_) {
         super(p_40565_, p_40566_);
     }
@@ -28,9 +28,7 @@ public class RopeBlockItem extends BlockItem implements SlotableItem {
         if (player == null) {
             return InteractionResult.FAIL;
         }
-
         BlockPos clickedPos = context.getClickedPos();
-
         scheduleRopePlacement(level, clickedPos.below(), player);
         return InteractionResult.CONSUME;
     }
@@ -70,10 +68,5 @@ public class RopeBlockItem extends BlockItem implements SlotableItem {
             }
         }
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public int getSlot() {
-        return 4;
     }
 }

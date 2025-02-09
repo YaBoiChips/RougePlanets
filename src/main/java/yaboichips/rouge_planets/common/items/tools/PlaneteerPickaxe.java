@@ -1,7 +1,6 @@
 package yaboichips.rouge_planets.common.items.tools;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
@@ -14,13 +13,11 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 import yaboichips.rouge_planets.capabilties.augments.AugCapProvider;
-import yaboichips.rouge_planets.capabilties.augments.AugmentContainer;
 import yaboichips.rouge_planets.common.items.LevelableItem;
-import yaboichips.rouge_planets.common.items.SlotableItem;
 
 import java.util.List;
 
-public class PlaneteerPickaxe extends PickaxeItem implements LevelableItem, SlotableItem {
+public class PlaneteerPickaxe extends PickaxeItem implements LevelableItem {
     public PlaneteerPickaxe() {
         super(Tiers.IRON, 1, -2.8F, new Properties());
     }
@@ -67,10 +64,5 @@ public class PlaneteerPickaxe extends PickaxeItem implements LevelableItem, Slot
                 capability.setAugmentSlots(3);
             }
         });
-    }
-
-    @Override
-    public int getSlot() {
-        return 0;
     }
 }

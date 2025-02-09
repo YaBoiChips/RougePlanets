@@ -51,8 +51,11 @@ import yaboichips.rouge_planets.capabilties.player.PlayerData;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataProvider;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.client.renderers.HumanRenderer;
+import yaboichips.rouge_planets.common.blocks.canoncontroller.CanonControllerScreen;
 import yaboichips.rouge_planets.common.entities.HumanMob;
 import yaboichips.rouge_planets.common.entities.augmentor.AugmentorScreen;
+import yaboichips.rouge_planets.common.entities.canon.CanonEntity;
+import yaboichips.rouge_planets.common.entities.canon.CanonEntityRenderer;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
 import yaboichips.rouge_planets.common.entities.merchant.RPMerchantScreen;
 import yaboichips.rouge_planets.core.RPBlocks;
@@ -65,6 +68,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static yaboichips.rouge_planets.core.RPBlockEntities.BLOCK_ENTITY_TYPES;
 import static yaboichips.rouge_planets.core.RPBlocks.BLOCKS;
 import static yaboichips.rouge_planets.core.RPEntities.ENTITIES;
 import static yaboichips.rouge_planets.core.RPItems.CREATIVE_MODE_TABS;
@@ -83,9 +87,7 @@ public class RougePlanets {
     public static long currentTick = 0;
     private static final Map<Long, Runnable> scheduledTasks = new ConcurrentHashMap<>();
     public static ResourceKey<Level> MINER_DIMENSION = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath(MODID, "miner_dimension"));
-
     public Map<Block, RenderType> renderBlocks = new HashMap<>();
-
 
     public RougePlanets() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -94,6 +96,7 @@ public class RougePlanets {
         ENTITIES.register(modEventBus);
         MENUS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+        BLOCK_ENTITY_TYPES.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
 
         modEventBus.addListener(this::onClientSetup);
@@ -119,9 +122,11 @@ public class RougePlanets {
             MenuScreens.register(FORGE_MASTER_MENU.get(), ForgeMasterScreen::new);
             MenuScreens.register(MERCHANT_MENU.get(), RPMerchantScreen::new);
             MenuScreens.register(AUGMENTOR_MENU.get(), AugmentorScreen::new);
+            MenuScreens.register(CANON_CONTROLLER.get(), CanonControllerScreen::new);
             EntityRenderers.register(RPEntities.FORGE_MASTER.get(), HumanRenderer::new);
             EntityRenderers.register(RPEntities.RP_MERCHANT.get(), HumanRenderer::new);
             EntityRenderers.register(RPEntities.AUGMENTOR.get(), HumanRenderer::new);
+            EntityRenderers.register(RPEntities.CANON.get(), CanonEntityRenderer::new);
         });
         renderBlocks.put(RPBlocks.SPACE_TORCH.get(), RenderType.cutout());
         renderBlocks.forEach(ItemBlockRenderTypes::setRenderLayer);
@@ -135,6 +140,7 @@ public class RougePlanets {
         event.put(RPEntities.FORGE_MASTER.get(), HumanMob.createAttributes().build());
         event.put(RPEntities.RP_MERCHANT.get(), HumanMob.createAttributes().build());
         event.put(RPEntities.AUGMENTOR.get(), HumanMob.createAttributes().build());
+        event.put(RPEntities.CANON.get(), CanonEntity.createAttributes().build());
     }
 
     public static void scheduleTask(long tick, Runnable task) {
@@ -240,7 +246,6 @@ public class RougePlanets {
         });
     }
 
-
     @SubscribeEvent
     public void onRenderGuiOverlay(RenderGuiOverlayEvent event) {
         if (event.getOverlay() == VanillaGuiOverlay.PLAYER_HEALTH.type()) {
@@ -297,5 +302,4 @@ public class RougePlanets {
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
-
 }

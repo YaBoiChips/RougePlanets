@@ -26,7 +26,18 @@
     "water_color": 4159204,
     "water_fog_color": 329011
   },
-  "features": [],
+  "features": [
+    [
+      "rougeplanets:ruby_ore",
+      "rougeplanets:sapphire_ore",
+      "rougeplanets:amber_ore",
+      "rougeplanets:onyx_ore",
+      "rougeplanets:opal_ore",
+      "rougeplanets:pyrite_ore",
+      "rougeplanets:thallium_ore",
+      "rougeplanets:topaz_ore"
+    ]
+  ],
   "has_precipitation": true,
   "spawn_costs": {},
   "spawners": {},

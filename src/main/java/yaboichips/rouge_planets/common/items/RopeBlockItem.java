@@ -34,7 +34,7 @@ public class RopeBlockItem extends BlockItem {
     }
 
     private void scheduleRopePlacement(Level serverLevel, BlockPos startPos, Player player) {
-        RougePlanets.scheduleTask(10 + RougePlanets.currentTick, () -> {
+        RougePlanets.scheduleTask(10, () -> {
             placeRope(serverLevel, startPos, player);
         });
     }

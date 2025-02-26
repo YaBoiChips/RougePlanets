@@ -1,5 +1,6 @@
 package yaboichips.rouge_planets.common.blocks.canoncontroller;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,15 +11,14 @@ import yaboichips.rouge_planets.core.RPMenus;
 
 public class CanonControllerMenu extends AbstractContainerMenu {
 
-
-    public CanonControllerMenu(int id, Inventory playerInventory) {
-        super(RPMenus.CANON_CONTROLLER.get(), id);
-
-        addPlayerInventory(playerInventory);
-    }
-
+    private BlockPos pos;
     public CanonControllerMenu(int id, Inventory playerInventory, FriendlyByteBuf buffer) {
-        this(id, playerInventory);
+        this(id, playerInventory, buffer.readBlockPos());
+    }
+    public CanonControllerMenu(int id, Inventory playerInventory, BlockPos pos) {
+        super(RPMenus.CANON_CONTROLLER.get(), id);
+        this.pos = pos;
+        addPlayerInventory(playerInventory);
     }
 
     @Override
@@ -75,6 +75,10 @@ public class CanonControllerMenu extends AbstractContainerMenu {
         for (int col = 0; col < 9; ++col) {
             this.addSlot(new Slot(playerInventory, col, startX + col * slotSizePlus2, startY + 58));
         }
+    }
+
+    public BlockPos getEntityPos(){
+        return pos;
     }
 }
 

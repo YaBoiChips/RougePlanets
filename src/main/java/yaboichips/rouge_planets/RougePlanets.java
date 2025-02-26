@@ -56,6 +56,7 @@ import yaboichips.rouge_planets.common.entities.HumanMob;
 import yaboichips.rouge_planets.common.entities.augmentor.AugmentorScreen;
 import yaboichips.rouge_planets.common.entities.canon.CanonEntity;
 import yaboichips.rouge_planets.common.entities.canon.CanonEntityRenderer;
+import yaboichips.rouge_planets.common.entities.ceo.CEOScreen;
 import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
 import yaboichips.rouge_planets.common.entities.merchant.RPMerchantScreen;
 import yaboichips.rouge_planets.core.RPBlocks;
@@ -70,6 +71,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static yaboichips.rouge_planets.core.RPBlockEntities.BLOCK_ENTITY_TYPES;
 import static yaboichips.rouge_planets.core.RPBlocks.BLOCKS;
+import static yaboichips.rouge_planets.core.RPEntities.CEO;
 import static yaboichips.rouge_planets.core.RPEntities.ENTITIES;
 import static yaboichips.rouge_planets.core.RPItems.CREATIVE_MODE_TABS;
 import static yaboichips.rouge_planets.core.RPItems.ITEMS;
@@ -122,10 +124,12 @@ public class RougePlanets {
             MenuScreens.register(FORGE_MASTER_MENU.get(), ForgeMasterScreen::new);
             MenuScreens.register(MERCHANT_MENU.get(), RPMerchantScreen::new);
             MenuScreens.register(AUGMENTOR_MENU.get(), AugmentorScreen::new);
+            MenuScreens.register(CEO_MENU.get(), CEOScreen::new);
             MenuScreens.register(CANON_CONTROLLER.get(), CanonControllerScreen::new);
             EntityRenderers.register(RPEntities.FORGE_MASTER.get(), HumanRenderer::new);
             EntityRenderers.register(RPEntities.RP_MERCHANT.get(), HumanRenderer::new);
             EntityRenderers.register(RPEntities.AUGMENTOR.get(), HumanRenderer::new);
+            EntityRenderers.register(RPEntities.CEO.get(), HumanRenderer::new);
             EntityRenderers.register(RPEntities.CANON.get(), CanonEntityRenderer::new);
         });
         renderBlocks.put(RPBlocks.SPACE_TORCH.get(), RenderType.cutout());
@@ -140,11 +144,11 @@ public class RougePlanets {
         event.put(RPEntities.FORGE_MASTER.get(), HumanMob.createAttributes().build());
         event.put(RPEntities.RP_MERCHANT.get(), HumanMob.createAttributes().build());
         event.put(RPEntities.AUGMENTOR.get(), HumanMob.createAttributes().build());
-        event.put(RPEntities.CANON.get(), CanonEntity.createAttributes().build());
+        event.put(RPEntities.CEO.get(), HumanMob.createAttributes().build());
     }
 
     public static void scheduleTask(long tick, Runnable task) {
-        scheduledTasks.put(tick, task);
+        scheduledTasks.put(tick + RougePlanets.currentTick, task);
     }
 
     public static void clearTask() {

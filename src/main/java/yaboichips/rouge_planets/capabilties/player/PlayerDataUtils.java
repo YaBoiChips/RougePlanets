@@ -1,7 +1,7 @@
 package yaboichips.rouge_planets.capabilties.player;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Inventory;
 import yaboichips.rouge_planets.capabilties.RougeCapabilities;
 import yaboichips.rouge_planets.common.containers.PlanetArmorContainer;
 import yaboichips.rouge_planets.common.containers.PlanetInventoryContainer;

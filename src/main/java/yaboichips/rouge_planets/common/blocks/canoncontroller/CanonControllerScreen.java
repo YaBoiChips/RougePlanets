@@ -6,6 +6,8 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import yaboichips.rouge_planets.network.RideCanonPacket;
+import yaboichips.rouge_planets.network.RougePackets;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 
@@ -26,7 +28,7 @@ public class CanonControllerScreen extends AbstractContainerScreen<CanonControll
     protected void init() {
         super.init();
         addRenderableWidget(Button.builder(Component.literal("Ride Canon"), button -> {
-//            ModPackets.sendToServer(new RideCanonPacket(menu.getBlockEntityPos()));
+            RougePackets.sendToServer(new RideCanonPacket(menu.getEntityPos()));
         }).pos(leftPos + 10, topPos + 20).size(100, 20).build());
     }
 

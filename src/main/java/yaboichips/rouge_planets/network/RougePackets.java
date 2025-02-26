@@ -63,9 +63,26 @@ public class RougePackets {
                 SendItemsToSlotPacket::decode,
                 SendItemsToSlotPacket::handle
         );
+        CHANNEL.registerMessage(
+                packetId++,
+                RideCanonPacket.class,
+                RideCanonPacket::encode,
+                RideCanonPacket::decode,
+                RideCanonPacket::handle
+        );
+        CHANNEL.registerMessage(
+                packetId++,
+                LayOffPacket.class,
+                LayOffPacket::encode,
+                LayOffPacket::decode,
+                LayOffPacket::handle
+        );
     }
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+    }
+    public static <MSG> void sendToServer(MSG message) {
+        CHANNEL.sendToServer(message);
     }
     public static <MSG> void sendToAll(MSG packet) {
         CHANNEL.send(PacketDistributor.ALL.noArg(), packet);

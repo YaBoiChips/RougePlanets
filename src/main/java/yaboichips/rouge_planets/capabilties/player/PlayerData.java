@@ -1,5 +1,6 @@
 package yaboichips.rouge_planets.capabilties.player;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.Container;
@@ -8,6 +9,9 @@ import net.minecraft.world.item.ItemStack;
 import yaboichips.rouge_planets.common.containers.PlanetArmorContainer;
 import yaboichips.rouge_planets.common.containers.PlanetInventoryContainer;
 import yaboichips.rouge_planets.common.containers.SaveableSimpleContainer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerData {
     public boolean isInitiated;
@@ -18,7 +22,6 @@ public class PlayerData {
     private int azuriumTimer;
     private int electryteTimer;
     private int chlorosynthTimer;
-
 
     public PlanetInventoryContainer planetInventory;
     private PlanetArmorContainer armorContainer;
@@ -56,36 +59,13 @@ public class PlayerData {
     public void setSavedInventory(SaveableSimpleContainer playerInventory) {
         this.playerInventory = playerInventory;
     }
-
-
     public boolean getIsInitiated() {
         return this.isInitiated;
     }
 
-
     public void setIsInitiated(boolean isInitiated) {
         this.isInitiated = isInitiated;
     }
-
-
-    public int getPlaneteerXP() {
-        return 0;
-    }
-
-
-    public void setPlaneteerXP() {
-    }
-
-
-    public int getPlaneteerLevel() {
-        return 0;
-    }
-
-
-    public void setPlaneteerLevel(int level) {
-
-    }
-
 
     public int getCredits() {
         return credits;

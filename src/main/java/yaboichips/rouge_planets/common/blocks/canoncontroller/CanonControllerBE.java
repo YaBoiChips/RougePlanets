@@ -39,7 +39,6 @@ public class CanonControllerBE extends BlockEntity {
             CanonEntity canon = RPEntities.CANON.get().create(level);
             if (canon != null) {
                 canon.setPos(this.getBlockPos().getCenter().relative(this.getBlockState().getValue(FACING), -1).relative(Direction.DOWN, 0.5));
-                canon.setLinkedController(this);
                 level.addFreshEntity(canon);
                 setLinkedCanon(canon);
             }

@@ -2,6 +2,7 @@ package yaboichips.rouge_planets.common.blocks.canoncontroller;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -22,8 +23,10 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 import yaboichips.rouge_planets.core.RPBlockEntities;
+import yaboichips.rouge_planets.core.RPMenus;
 
 public class CanonControllerBlock extends DirectionalBlock implements EntityBlock {
     public CanonControllerBlock() {
@@ -53,14 +56,14 @@ public class CanonControllerBlock extends DirectionalBlock implements EntityBloc
     @Nullable
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        return new SimpleMenuProvider((p_48785_, p_48786_, p_48787_) -> new CanonControllerMenu(p_48785_, p_48786_), Component.literal("idk"));
+        return new SimpleMenuProvider((p_48785_, p_48786_, p_48787_) -> new CanonControllerMenu(p_48785_, p_48786_, pos), Component.literal("idk"));
     }
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            player.openMenu(state.getMenuProvider(level, pos));
+            NetworkHooks.openScreen((ServerPlayer) player, getMenuProvider(state, level, pos), friendlyByteBuf -> friendlyByteBuf.writeBlockPos(pos));
             return InteractionResult.CONSUME;
         }
     }
@@ -99,7 +102,6 @@ public class CanonControllerBlock extends DirectionalBlock implements EntityBloc
 
         return shape;
     }
-
     public VoxelShape makeShapeNorth() {
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0.0625, 0, 0.25, 0.9375, 0.0625, 0.75), BooleanOp.OR);

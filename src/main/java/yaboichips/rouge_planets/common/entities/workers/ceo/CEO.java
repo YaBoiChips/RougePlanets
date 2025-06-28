@@ -31,7 +31,7 @@ public class CEO extends HumanMob {
         if (!p.level().isClientSide) {
             if (p instanceof ServerPlayer player) {
                 if (!PlayerDataUtils.getIsInitiated(player)) {
-                    player.sendSystemMessage(Component.literal("Initiated"));
+                    player.sendSystemMessage(Component.literal("Welcome to the team! Remember, you can come to me with anything. Just you'll get fired if you do."));
                     PlayerDataUtils.setPlanetContainer(player, new PlanetInventoryContainer());
                     PlayerDataUtils.setArmorContainer(player, new PlanetArmorContainer());
                     PlayerDataUtils.setInitiated(player, true);

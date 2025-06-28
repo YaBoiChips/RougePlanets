@@ -16,8 +16,8 @@ import yaboichips.rouge_planets.common.entities.workers.HumanMob;
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 
 public class RPMerchant extends HumanMob {
-    public RPMerchant(EntityType<? extends Mob> p_21368_, Level p_21369_) {
-        super(p_21368_, p_21369_);
+    public RPMerchant(EntityType<? extends Mob> mob, Level level) {
+        super(mob, level);
     }
 
 
@@ -28,7 +28,7 @@ public class RPMerchant extends HumanMob {
                 if (!PlayerDataUtils.getIsInitiated(player)) {
                     player.sendSystemMessage(Component.literal("Who are you? I only sell to qualified personal!"));
                 } else if (hand == InteractionHand.MAIN_HAND) {
-                    player.openMenu(new SimpleMenuProvider((id, playerInv, container) -> new RPMerchantMenu(id, playerInv, PlayerDataUtils.getPlanetContainer(player)), Component.literal("Merchant")));
+                    player.openMenu(new SimpleMenuProvider((id, playerInv, container) -> new RPMerchantMenu(id, playerInv, PlayerDataUtils.getPlanetContainer(player), PlayerDataUtils.getArmorContainer(player)), Component.literal("Merchant")));
                     return InteractionResult.SUCCESS;
                 }
             }

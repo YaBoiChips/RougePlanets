@@ -37,6 +37,8 @@ public class RPItems {
     public static final RegistryObject<Item> AMBER = ITEMS.register("amber", ()-> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ONYX = ITEMS.register("onyx", ()-> new Item(new Item.Properties()));
     public static final RegistryObject<Item> PYRITE = ITEMS.register("pyrite", ()-> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> QUARTZINE = ITEMS.register("quartzine", ()-> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> THALLIUM_INGOT = ITEMS.register("thallium_ingot", ()-> new Item(new Item.Properties()));
     public static final RegistryObject<Item> THALLIUM_DUST = ITEMS.register("thallium_dust", ()-> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ENERGETIC_DUST = ITEMS.register("energetic_dust", ()-> new Item(new Item.Properties()));

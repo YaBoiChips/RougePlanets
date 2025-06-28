@@ -236,7 +236,6 @@ public class RougePlanets {
     @SubscribeEvent
     public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         ResourceKey<Level> fromDimension = event.getFrom();
-
         // Check if the dimension the player is leaving belongs to your mod
         if (fromDimension.location().getNamespace().equals(MODID)) {
             if (event.getEntity().getServer().getLevel(fromDimension).players().isEmpty()) {
@@ -271,12 +270,6 @@ public class RougePlanets {
         if (event.getOverlay() == VanillaGuiOverlay.PLAYER_HEALTH.type()) {
             renderIntOnHud(event.getGuiGraphics());
         }
-    }
-
-    @SubscribeEvent
-    public void registerSpawnPlacements(SpawnPlacementRegisterEvent event){
-        event.register(RPEntities.ALIEN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GenericMonster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
-        event.register(RPEntities.CYCLOPS.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GenericMonster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
     }
 
     @SubscribeEvent

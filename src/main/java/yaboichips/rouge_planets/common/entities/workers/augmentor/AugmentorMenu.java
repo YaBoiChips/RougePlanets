@@ -5,6 +5,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import yaboichips.rouge_planets.capabilties.RougeCapabilities;
@@ -73,6 +74,12 @@ public class AugmentorMenu extends AbstractContainerMenu {
     public void onClose() {
         ItemStack stack = augmentableSlot.getItem(0);
         container.addItem(stack);
+    }
+    @Override
+    public void clicked(int slot, int p_150401_, ClickType clickType, Player p_150403_) {
+        if (slot >= 0) {
+            super.clicked(slot, p_150401_, clickType, p_150403_);
+        }
     }
 
 

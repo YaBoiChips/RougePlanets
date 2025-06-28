@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "rougeplanets:amber_ore",
+    "rougeplanets:deepslate_amber_ore",
+    "rougeplanets:onyx_ore",
+    "rougeplanets:deepslate_onyx_ore",
+    "rougeplanets:opal_ore",
+    "rougeplanets:deepslate_opal_ore",
+    "rougeplanets:pyrite_ore",
+    "rougeplanets:deepslate_pyrite_ore",
+    "rougeplanets:ruby_ore",
+    "rougeplanets:deepslate_ruby_ore",
+    "rougeplanets:sapphire_ore",
+    "rougeplanets:deepslate_sapphire_ore",
+    "rougeplanets:thallium_ore",
+    "rougeplanets:deepslate_thallium_ore",
+    "rougeplanets:topaz_ore",
+    "rougeplanets:deepslate_topaz_ore",
+    "rougeplanets:quartzine_ore",
+    "rougeplanets:deepslate_quartzine_ore"
+  ]
+}

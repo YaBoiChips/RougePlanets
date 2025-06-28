@@ -8,6 +8,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
@@ -56,6 +57,15 @@ public class ForgeMasterMenu extends AbstractContainerMenu {
     public ForgeMasterMenu(int i, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
         this(i, inventory, new SimpleContainer(36), new SimpleContainer(4));
     }
+
+    @Override
+    public void clicked(int slot, int p_150401_, ClickType clickType, Player p_150403_) {
+        if (slot >= 0) {
+            super.clicked(slot, p_150401_, clickType, p_150403_);
+        }
+    }
+
+
 
     @Override
     public void removed(Player p_38940_) {

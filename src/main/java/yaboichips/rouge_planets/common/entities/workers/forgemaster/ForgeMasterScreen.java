@@ -2,10 +2,12 @@ package yaboichips.rouge_planets.common.entities.workers.forgemaster;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import yaboichips.rouge_planets.capabilties.player.ClientPlayerData;
 import yaboichips.rouge_planets.network.LevelUpItemPacket;
 import yaboichips.rouge_planets.network.RougePackets;
 
@@ -29,7 +31,7 @@ public class ForgeMasterScreen extends AbstractContainerScreen<ForgeMasterMenu> 
         int y = (this.height - this.imageHeight) / 2;
         this.addRenderableWidget(Button.builder(Component.literal("Level Up"), button -> {
             RougePackets.CHANNEL.sendToServer(new LevelUpItemPacket());
-        }).bounds(x + 96 , y + 70, 60, 20).build());
+        }).tooltip(Tooltip.create(Component.literal("Cost to upgrade, Level * 50₡"))).bounds(x + 96 , y + 70, 60, 20).build());
     }
 
 
@@ -41,8 +43,7 @@ public class ForgeMasterScreen extends AbstractContainerScreen<ForgeMasterMenu> 
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY + 58, 4210752, false);
+        guiGraphics.drawString(this.font, Component.literal(ClientPlayerData.getCredits() + "₡"), this.titleLabelX + 215, this.titleLabelY, 4210752, false);
     }
 
     @Override

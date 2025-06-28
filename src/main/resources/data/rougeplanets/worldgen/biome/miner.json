@@ -37,13 +37,12 @@
       "rougeplanets:thallium_ore",
       "rougeplanets:topaz_ore",
       "rougeplanets:quartzine_ore"
-
     ]
   ],
   "has_precipitation": true,
   "spawn_costs": {},
   "spawners": {
-    "monster": [
+    "misc": [
       {
         "type": "rougeplanets:cyclops",
         "weight": 500,

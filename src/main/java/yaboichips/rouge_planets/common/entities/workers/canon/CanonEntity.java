@@ -80,16 +80,17 @@ public class CanonEntity extends Entity implements GeoEntity {
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (!player.level().isClientSide) {
-            player.startRiding(this);
-        }
         if (player instanceof ServerPlayer serverPlayer) {
-            RougePlanets.scheduleTask(27, player::stopRiding);
-            RougePlanets.scheduleTask(30, () -> launchPlayer(serverPlayer, true));
-            RougePlanets.scheduleTask(45, () -> launchPlayer(serverPlayer, false));
-            RougePlanets.scheduleTask(60, () -> teleportToLevel(serverPlayer));
+            if (PlayerDataUtils.getIsInitiated(serverPlayer)) {
+                serverPlayer.startRiding(this);
+                RougePlanets.scheduleTask(27, player::stopRiding);
+                RougePlanets.scheduleTask(30, () -> launchPlayer(serverPlayer, true));
+                RougePlanets.scheduleTask(45, () -> launchPlayer(serverPlayer, false));
+                RougePlanets.scheduleTask(60, () -> teleportToLevel(serverPlayer));
+            }
+            return InteractionResult.SUCCESS;
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.FAIL;
     }
 
     public void launchPlayer(ServerPlayer serverPlayer, boolean playSound) {

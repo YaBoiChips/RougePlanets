@@ -20,9 +20,12 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
@@ -33,6 +36,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -50,15 +54,16 @@ import yaboichips.rouge_planets.capabilties.player.ClientPlayerData;
 import yaboichips.rouge_planets.capabilties.player.PlayerData;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataProvider;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
+import yaboichips.rouge_planets.client.renderers.GenericMonsterRenderer;
 import yaboichips.rouge_planets.client.renderers.HumanRenderer;
 import yaboichips.rouge_planets.common.blocks.canoncontroller.CanonControllerScreen;
-import yaboichips.rouge_planets.common.entities.HumanMob;
-import yaboichips.rouge_planets.common.entities.augmentor.AugmentorScreen;
-import yaboichips.rouge_planets.common.entities.canon.CanonEntity;
-import yaboichips.rouge_planets.common.entities.canon.CanonEntityRenderer;
-import yaboichips.rouge_planets.common.entities.ceo.CEOScreen;
-import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterScreen;
-import yaboichips.rouge_planets.common.entities.merchant.RPMerchantScreen;
+import yaboichips.rouge_planets.common.entities.monsters.GenericMonster;
+import yaboichips.rouge_planets.common.entities.workers.HumanMob;
+import yaboichips.rouge_planets.common.entities.workers.augmentor.AugmentorScreen;
+import yaboichips.rouge_planets.common.entities.workers.canon.CanonEntityRenderer;
+import yaboichips.rouge_planets.common.entities.workers.ceo.CEOScreen;
+import yaboichips.rouge_planets.common.entities.workers.forgemaster.ForgeMasterScreen;
+import yaboichips.rouge_planets.common.entities.workers.merchant.RPMerchantScreen;
 import yaboichips.rouge_planets.core.RPBlocks;
 import yaboichips.rouge_planets.core.RPEntities;
 import yaboichips.rouge_planets.network.RougePackets;
@@ -71,7 +76,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static yaboichips.rouge_planets.core.RPBlockEntities.BLOCK_ENTITY_TYPES;
 import static yaboichips.rouge_planets.core.RPBlocks.BLOCKS;
-import static yaboichips.rouge_planets.core.RPEntities.CEO;
 import static yaboichips.rouge_planets.core.RPEntities.ENTITIES;
 import static yaboichips.rouge_planets.core.RPItems.CREATIVE_MODE_TABS;
 import static yaboichips.rouge_planets.core.RPItems.ITEMS;
@@ -79,7 +83,6 @@ import static yaboichips.rouge_planets.core.RPMenus.*;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(RougePlanets.MODID)
-@Mod.EventBusSubscriber(modid = "yourmodid")
 public class RougePlanets {
 
     // Define mod id in a common place for everything to reference
@@ -90,6 +93,12 @@ public class RougePlanets {
     private static final Map<Long, Runnable> scheduledTasks = new ConcurrentHashMap<>();
     public static ResourceKey<Level> MINER_DIMENSION = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath(MODID, "miner_dimension"));
     public Map<Block, RenderType> renderBlocks = new HashMap<>();
+
+    /*
+    TODO MOBS, spitter, gremlin, bulky guy
+    TODO BIOMES
+    TODO POI'S
+     */
 
     public RougePlanets() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -131,6 +140,10 @@ public class RougePlanets {
             EntityRenderers.register(RPEntities.AUGMENTOR.get(), HumanRenderer::new);
             EntityRenderers.register(RPEntities.CEO.get(), HumanRenderer::new);
             EntityRenderers.register(RPEntities.CANON.get(), CanonEntityRenderer::new);
+
+            EntityRenderers.register(RPEntities.CYCLOPS.get(), GenericMonsterRenderer::new);
+            EntityRenderers.register(RPEntities.ALIEN.get(), GenericMonsterRenderer::new);
+
         });
         renderBlocks.put(RPBlocks.SPACE_TORCH.get(), RenderType.cutout());
         renderBlocks.forEach(ItemBlockRenderTypes::setRenderLayer);
@@ -145,6 +158,9 @@ public class RougePlanets {
         event.put(RPEntities.RP_MERCHANT.get(), HumanMob.createAttributes().build());
         event.put(RPEntities.AUGMENTOR.get(), HumanMob.createAttributes().build());
         event.put(RPEntities.CEO.get(), HumanMob.createAttributes().build());
+
+        event.put(RPEntities.CYCLOPS.get(), GenericMonster.createAttributes().build());
+        event.put(RPEntities.ALIEN.get(), GenericMonster.createAttributes().build());
     }
 
     public static void scheduleTask(long tick, Runnable task) {
@@ -255,6 +271,12 @@ public class RougePlanets {
         if (event.getOverlay() == VanillaGuiOverlay.PLAYER_HEALTH.type()) {
             renderIntOnHud(event.getGuiGraphics());
         }
+    }
+
+    @SubscribeEvent
+    public void registerSpawnPlacements(SpawnPlacementRegisterEvent event){
+        event.register(RPEntities.ALIEN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GenericMonster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
+        event.register(RPEntities.CYCLOPS.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GenericMonster::checkMobSpawnRules, SpawnPlacementRegisterEvent.Operation.OR);
     }
 
     @SubscribeEvent

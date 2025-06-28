@@ -1,10 +1,9 @@
-package yaboichips.rouge_planets.common.entities.canon;
+package yaboichips.rouge_planets.common.entities.workers.canon;
 
 import com.mojang.serialization.DynamicOps;
 import commoble.infiniverse.api.InfiniverseAPI;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -110,6 +109,7 @@ public class CanonEntity extends Entity implements GeoEntity {
             loadInventoryFromCapability(serverPlayer, PlayerDataUtils.getPlanetContainer(serverPlayer));
             serverPlayer.teleportTo(world, serverPlayer.getX(), 145, serverPlayer.getZ(), 0, 0);
             serverPlayer.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 120));
+
             CanonEntity canon = RPEntities.CANON.get().create(world);
             Vec3 canonPos = new BlockPos(serverPlayer.blockPosition().getX(), 124, serverPlayer.blockPosition().getZ()).getCenter().add(0, -.5, 0);
             canon.setPos(canonPos);
@@ -126,6 +126,15 @@ public class CanonEntity extends Entity implements GeoEntity {
             PlayerDataUtils.setPlanetContainer(serverPlayer, new PlanetInventoryContainer(serverPlayer.getInventory()));
             loadInventoryFromCapability(serverPlayer, PlayerDataUtils.getSavedInventory(serverPlayer));
             serverPlayer.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 420));
+            RougePlanets.scheduleTask(419, () -> checkToAddSlowFalling(serverPlayer));
+        }
+    }
+    public void checkToAddSlowFalling(ServerPlayer player){
+        BlockPos playerPos = player.blockPosition();
+        BlockPos targetPos = playerPos.below(10);
+        ServerLevel world = player.serverLevel();
+        if(world.getBlockState(targetPos).isAir()){
+            player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 420));
         }
     }
 

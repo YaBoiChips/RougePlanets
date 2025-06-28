@@ -3,7 +3,7 @@ package yaboichips.rouge_planets.network;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
-import yaboichips.rouge_planets.common.entities.merchant.RPMerchantMenu;
+import yaboichips.rouge_planets.common.entities.workers.merchant.RPMerchantMenu;
 
 import java.util.function.Supplier;
 

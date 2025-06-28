@@ -2,7 +2,7 @@ package yaboichips.rouge_planets.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
-import yaboichips.rouge_planets.common.entities.augmentor.AugmentorMenu;
+import yaboichips.rouge_planets.common.entities.workers.augmentor.AugmentorMenu;
 
 import java.util.function.Supplier;
 

@@ -1,4 +1,4 @@
-package yaboichips.rouge_planets.common.entities.merchant;
+package yaboichips.rouge_planets.common.entities.workers.merchant;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;

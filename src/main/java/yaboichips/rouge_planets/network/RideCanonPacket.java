@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
 import yaboichips.rouge_planets.common.blocks.canoncontroller.CanonControllerBE;
-import yaboichips.rouge_planets.common.entities.canon.CanonEntity;
+import yaboichips.rouge_planets.common.entities.workers.canon.CanonEntity;
 
 import java.util.function.Supplier;
 

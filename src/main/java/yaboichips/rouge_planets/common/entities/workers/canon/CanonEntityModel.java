@@ -1,4 +1,4 @@
-package yaboichips.rouge_planets.common.entities.canon;
+package yaboichips.rouge_planets.common.entities.workers.canon;
 
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;

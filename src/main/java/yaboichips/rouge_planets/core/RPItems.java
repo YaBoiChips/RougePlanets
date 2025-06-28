@@ -85,6 +85,7 @@ public class RPItems {
     public static final RegistryObject<Item> DEEPSLATE_ONYX_ORE = ITEMS.register("deepslate_onyx_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_ONYX_ORE.get(), new Item.Properties()));
     public static final RegistryObject<Item> DEEPSLATE_PYRITE_ORE = ITEMS.register("deepslate_pyrite_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_PYRITE_ORE.get(), new Item.Properties()));
     public static final RegistryObject<Item> DEEPSLATE_THALLIUM_ORE = ITEMS.register("deepslate_thallium_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_THALLIUM_ORE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> DEEPSLATE_QUARTZINE_ORE = ITEMS.register("deepslate_quartzine_ore", ()-> new BlockItem(RPBlocks.DEEPSLATE_QUARTZINE_ORE.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> RUBY_ORE = ITEMS.register("ruby_ore", ()-> new BlockItem(RPBlocks.RUBY_ORE.get(), new Item.Properties()));
     public static final RegistryObject<Item> SAPPHIRE_ORE = ITEMS.register("sapphire_ore", ()-> new BlockItem(RPBlocks.SAPPHIRE_ORE.get(), new Item.Properties()));
@@ -94,7 +95,8 @@ public class RPItems {
     public static final RegistryObject<Item> ONYX_ORE = ITEMS.register("onyx_ore", ()-> new BlockItem(RPBlocks.ONYX_ORE.get(), new Item.Properties()));
     public static final RegistryObject<Item> PYRITE_ORE = ITEMS.register("pyrite_ore", ()-> new BlockItem(RPBlocks.PYRITE_ORE.get(), new Item.Properties()));
     public static final RegistryObject<Item> THALLIUM_ORE = ITEMS.register("thallium_ore", ()-> new BlockItem(RPBlocks.THALLIUM_ORE.get(), new Item.Properties()));
-    
+    public static final RegistryObject<Item> QUARTZINE_ORE = ITEMS.register("quartzine_ore", ()-> new BlockItem(RPBlocks.QUARTZINE_ORE.get(), new Item.Properties()));
+
     public static final RegistryObject<Item> TP = ITEMS.register("tp", ()-> new BlockItem(RPBlocks.TP.get(), new Item.Properties()));
 
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("rp_tab", () -> CreativeModeTab.builder()

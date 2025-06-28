@@ -36,6 +36,7 @@ public class RPBlocks {
     public static final RegistryObject<Block> DEEPSLATE_ONYX_ORE = BLOCKS.register("deepslate_onyx_ore", RPBlocks::createDeepslateOreBlock);
     public static final RegistryObject<Block> DEEPSLATE_PYRITE_ORE = BLOCKS.register("deepslate_pyrite_ore", RPBlocks::createDeepslateOreBlock);
     public static final RegistryObject<Block> DEEPSLATE_THALLIUM_ORE = BLOCKS.register("deepslate_thallium_ore", RPBlocks::createDeepslateOreBlock);
+    public static final RegistryObject<Block> DEEPSLATE_QUARTZINE_ORE = BLOCKS.register("deepslate_quartzine_ore", RPBlocks::createDeepslateOreBlock);
 
     public static final RegistryObject<Block> RUBY_ORE = BLOCKS.register("ruby_ore", RPBlocks::createOreBlock);
     public static final RegistryObject<Block> SAPPHIRE_ORE = BLOCKS.register("sapphire_ore", RPBlocks::createOreBlock);
@@ -45,6 +46,8 @@ public class RPBlocks {
     public static final RegistryObject<Block> ONYX_ORE = BLOCKS.register("onyx_ore", RPBlocks::createOreBlock);
     public static final RegistryObject<Block> PYRITE_ORE = BLOCKS.register("pyrite_ore", RPBlocks::createOreBlock);
     public static final RegistryObject<Block> THALLIUM_ORE = BLOCKS.register("thallium_ore", RPBlocks::createOreBlock);
+    public static final RegistryObject<Block> QUARTZINE_ORE = BLOCKS.register("quartzine_ore", RPBlocks::createOreBlock);
+
 //    public static final RegistryObject<Block> CANON_CONTROLLER = BLOCKS.register("canon_controller", CanonControllerBlock::new);
 
     public static Block createDeepslateOreBlock() {

@@ -1,4 +1,4 @@
-package yaboichips.rouge_planets.common.entities.ceo;
+package yaboichips.rouge_planets.common.entities.workers.ceo;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -14,8 +14,7 @@ import net.minecraft.world.level.Level;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.common.containers.PlanetArmorContainer;
 import yaboichips.rouge_planets.common.containers.PlanetInventoryContainer;
-import yaboichips.rouge_planets.common.entities.HumanMob;
-import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterMenu;
+import yaboichips.rouge_planets.common.entities.workers.HumanMob;
 import yaboichips.rouge_planets.core.RPItems;
 
 import java.util.ArrayList;

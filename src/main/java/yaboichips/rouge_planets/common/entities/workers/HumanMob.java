@@ -1,4 +1,4 @@
-package yaboichips.rouge_planets.common.entities;
+package yaboichips.rouge_planets.common.entities.workers;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;

@@ -1,4 +1,4 @@
-package yaboichips.rouge_planets.common.entities.ceo;
+package yaboichips.rouge_planets.common.entities.workers.ceo;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -6,9 +6,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterMenu;
 import yaboichips.rouge_planets.network.LayOffPacket;
-import yaboichips.rouge_planets.network.LevelUpItemPacket;
 import yaboichips.rouge_planets.network.RougePackets;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
@@ -31,6 +29,7 @@ public class CEOScreen extends AbstractContainerScreen<CEOMenu> {
         int y = (this.height - this.imageHeight) / 2;
         this.addRenderableWidget(Button.builder(Component.literal("Lay Off"), button -> {
             RougePackets.CHANNEL.sendToServer(new LayOffPacket());
+            this.onClose();
         }).bounds(x + 96 , y + 70, 60, 20).build());
     }
     @Override

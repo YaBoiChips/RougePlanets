@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import yaboichips.rouge_planets.common.entities.canon.CanonEntity;
+import yaboichips.rouge_planets.common.entities.workers.canon.CanonEntity;
 import yaboichips.rouge_planets.core.RPBlockEntities;
 import yaboichips.rouge_planets.core.RPEntities;
 

@@ -1,4 +1,4 @@
-package yaboichips.rouge_planets.common.entities.augmentor;
+package yaboichips.rouge_planets.common.entities.workers.augmentor;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.SimpleContainer;

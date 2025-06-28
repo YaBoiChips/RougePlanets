@@ -1,4 +1,4 @@
-package yaboichips.rouge_planets.common.entities.forgemaster;
+package yaboichips.rouge_planets.common.entities.workers.ceo;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -12,18 +12,17 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.common.items.LevelableItem;
+import yaboichips.rouge_planets.core.RPItems;
 import yaboichips.rouge_planets.core.RPMenus;
 
-public class ForgeMasterMenu extends AbstractContainerMenu {
-
+public class CEOMenu extends AbstractContainerMenu {
     private Container container;
 
     public Player player;
-
     private final SimpleContainer levelSlot = new SimpleContainer(1);
 
-    public ForgeMasterMenu(int id, Inventory playerInventory, Container container, Container armor) {
-        super(RPMenus.FORGE_MASTER_MENU.get(), id);
+    public CEOMenu(int id, Inventory playerInventory, Container container, Container armor) {
+        super(RPMenus.CEO_MENU.get(), id);
         checkContainerSize(container, 36);
         checkContainerSize(levelSlot, 1);
         checkContainerSize(armor, 4);
@@ -49,11 +48,7 @@ public class ForgeMasterMenu extends AbstractContainerMenu {
         }
     }
 
-    public ForgeMasterMenu(int id, Inventory playerInventory) {
-        super(RPMenus.FORGE_MASTER_MENU.get(), id);
-    }
-
-    public ForgeMasterMenu(int i, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
+    public CEOMenu(int i, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
         this(i, inventory, new SimpleContainer(36), new SimpleContainer(4));
     }
 
@@ -64,31 +59,24 @@ public class ForgeMasterMenu extends AbstractContainerMenu {
         }
         super.removed(p_38940_);
     }
-
     @Override
     public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
         return null;
     }
-
     @Override
     public boolean stillValid(Player player) {
         return container.stillValid(player);
     }
-
-    public void levelUpItem() {
+    public void layOff() {
         if (!player.level().isClientSide()) {
             ItemStack stack = levelSlot.getItem(0);
             if (!stack.isEmpty() && stack.getItem() instanceof LevelableItem) {
-                if (((LevelableItem) stack.getItem()).getLevel(stack) < 20) {
-                    if (PlayerDataUtils.getCredits((ServerPlayer) player) >= stack.getTag().getInt("LevelCost")) {
-                        ((LevelableItem) stack.getItem()).levelUp(stack);
-                        PlayerDataUtils.subCredits((ServerPlayer) player, stack.getTag().getInt("LevelCost"));
-                        ((LevelableItem) stack.getItem()).setLevelUpCost(stack, 50 * ((LevelableItem) stack.getItem()).getLevel(stack));
-                    } else {
-                        player.sendSystemMessage(Component.literal("You need " + (stack.getTag().getInt("LevelCost") - PlayerDataUtils.getCredits((ServerPlayer) player) + " more Credits")));
-                    }
+                if (((LevelableItem) stack.getItem()).getLevel(stack) == 20) {
+                    PlayerDataUtils.setInitiated((ServerPlayer) player, false);
+                    player.getInventory().add(RPItems.TEST_AUGMENT.get().getDefaultInstance());
+                    player.sendSystemMessage(Component.literal("If you worked longer we would have had to pay you benefits. Here's an augment as severance, come back to me when your ready to be rehired"));
                 } else {
-                    player.sendSystemMessage(Component.literal("Item is Max Level"));
+                    player.sendSystemMessage(Component.literal("You haven't worked long enough for the lay off, come back to me with a Level 20 Item"));
                 }
             }
         }

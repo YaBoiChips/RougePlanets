@@ -1,7 +1,6 @@
-package yaboichips.rouge_planets.common.entities.merchant;
+package yaboichips.rouge_planets.common.entities.workers.merchant;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import yaboichips.rouge_planets.core.RPItems;
 
 import java.util.ArrayList;

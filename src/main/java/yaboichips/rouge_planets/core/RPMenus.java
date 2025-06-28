@@ -6,10 +6,10 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import yaboichips.rouge_planets.common.blocks.canoncontroller.CanonControllerMenu;
-import yaboichips.rouge_planets.common.entities.augmentor.AugmentorMenu;
-import yaboichips.rouge_planets.common.entities.ceo.CEOMenu;
-import yaboichips.rouge_planets.common.entities.forgemaster.ForgeMasterMenu;
-import yaboichips.rouge_planets.common.entities.merchant.RPMerchantMenu;
+import yaboichips.rouge_planets.common.entities.workers.augmentor.AugmentorMenu;
+import yaboichips.rouge_planets.common.entities.workers.ceo.CEOMenu;
+import yaboichips.rouge_planets.common.entities.workers.forgemaster.ForgeMasterMenu;
+import yaboichips.rouge_planets.common.entities.workers.merchant.RPMerchantMenu;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 

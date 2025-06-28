@@ -2,7 +2,7 @@ package yaboichips.rouge_planets.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
-import yaboichips.rouge_planets.common.entities.ceo.CEOMenu;
+import yaboichips.rouge_planets.common.entities.workers.ceo.CEOMenu;
 
 import java.util.function.Supplier;
 

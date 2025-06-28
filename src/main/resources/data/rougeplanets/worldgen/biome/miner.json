@@ -35,11 +35,28 @@
       "rougeplanets:opal_ore",
       "rougeplanets:pyrite_ore",
       "rougeplanets:thallium_ore",
-      "rougeplanets:topaz_ore"
+      "rougeplanets:topaz_ore",
+      "rougeplanets:quartzine_ore"
+
     ]
   ],
   "has_precipitation": true,
   "spawn_costs": {},
-  "spawners": {},
+  "spawners": {
+    "monster": [
+      {
+        "type": "rougeplanets:cyclops",
+        "weight": 500,
+        "minCount": 1,
+        "maxCount": 4
+      },
+      {
+        "type": "rougeplanets:alien",
+        "weight": 300,
+        "minCount": 1,
+        "maxCount": 4
+      }
+    ]
+  },
   "temperature": 0.8
 }

@@ -42,7 +42,7 @@
   "has_precipitation": true,
   "spawn_costs": {},
   "spawners": {
-    "misc": [
+    "creature": [
       {
         "type": "rougeplanets:cyclops",
         "weight": 500,

@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -20,12 +21,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
@@ -36,9 +35,9 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -64,6 +63,7 @@ import yaboichips.rouge_planets.common.entities.workers.canon.CanonEntityRendere
 import yaboichips.rouge_planets.common.entities.workers.ceo.CEOScreen;
 import yaboichips.rouge_planets.common.entities.workers.forgemaster.ForgeMasterScreen;
 import yaboichips.rouge_planets.common.entities.workers.merchant.RPMerchantScreen;
+import yaboichips.rouge_planets.common.world.DimensionSkybox;
 import yaboichips.rouge_planets.core.RPBlocks;
 import yaboichips.rouge_planets.core.RPEntities;
 import yaboichips.rouge_planets.network.RougePackets;
@@ -143,7 +143,6 @@ public class RougePlanets {
 
             EntityRenderers.register(RPEntities.CYCLOPS.get(), GenericMonsterRenderer::new);
             EntityRenderers.register(RPEntities.ALIEN.get(), GenericMonsterRenderer::new);
-
         });
         renderBlocks.put(RPBlocks.SPACE_TORCH.get(), RenderType.cutout());
         renderBlocks.forEach(ItemBlockRenderTypes::setRenderLayer);
@@ -180,6 +179,7 @@ public class RougePlanets {
             }
         }
     }
+
 
     @SubscribeEvent
     public void onPlayerJoin(EntityJoinLevelEvent event) {

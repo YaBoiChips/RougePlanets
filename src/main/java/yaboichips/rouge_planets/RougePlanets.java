@@ -9,7 +9,6 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -23,7 +22,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
@@ -32,12 +30,12 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -56,16 +54,17 @@ import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.client.renderers.GenericMonsterRenderer;
 import yaboichips.rouge_planets.client.renderers.HumanRenderer;
 import yaboichips.rouge_planets.common.blocks.canoncontroller.CanonControllerScreen;
+import yaboichips.rouge_planets.common.commands.PartyCommand;
 import yaboichips.rouge_planets.common.entities.monsters.GenericMonster;
 import yaboichips.rouge_planets.common.entities.workers.HumanMob;
 import yaboichips.rouge_planets.common.entities.workers.augmentor.AugmentorScreen;
 import yaboichips.rouge_planets.common.entities.workers.canon.CanonEntityRenderer;
 import yaboichips.rouge_planets.common.entities.workers.ceo.CEOScreen;
 import yaboichips.rouge_planets.common.entities.workers.forgemaster.ForgeMasterScreen;
-import yaboichips.rouge_planets.common.entities.workers.merchant.RPMerchantScreen;
-import yaboichips.rouge_planets.common.world.DimensionSkybox;
+import yaboichips.rouge_planets.common.entities.workers.merchant.MerchantScreen;
 import yaboichips.rouge_planets.core.RPBlocks;
 import yaboichips.rouge_planets.core.RPEntities;
+import yaboichips.rouge_planets.core.world.RPFeatures;
 import yaboichips.rouge_planets.network.RougePackets;
 import yaboichips.rouge_planets.network.SendPlayerDataPacket;
 
@@ -80,6 +79,7 @@ import static yaboichips.rouge_planets.core.RPEntities.ENTITIES;
 import static yaboichips.rouge_planets.core.RPItems.CREATIVE_MODE_TABS;
 import static yaboichips.rouge_planets.core.RPItems.ITEMS;
 import static yaboichips.rouge_planets.core.RPMenus.*;
+import static yaboichips.rouge_planets.core.world.RPFeatures.FEATURES;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(RougePlanets.MODID)
@@ -108,6 +108,7 @@ public class RougePlanets {
         MENUS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         BLOCK_ENTITY_TYPES.register(modEventBus);
+        FEATURES.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
 
         modEventBus.addListener(this::onClientSetup);
@@ -131,7 +132,7 @@ public class RougePlanets {
     private void onClientSetup(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MenuScreens.register(FORGE_MASTER_MENU.get(), ForgeMasterScreen::new);
-            MenuScreens.register(MERCHANT_MENU.get(), RPMerchantScreen::new);
+            MenuScreens.register(MERCHANT_MENU.get(), MerchantScreen::new);
             MenuScreens.register(AUGMENTOR_MENU.get(), AugmentorScreen::new);
             MenuScreens.register(CEO_MENU.get(), CEOScreen::new);
             MenuScreens.register(CANON_CONTROLLER.get(), CanonControllerScreen::new);
@@ -263,6 +264,19 @@ public class RougePlanets {
                 playerData.setChlorosynthTimer(playerData.getChlorosynthTimer() - 1);
             }
         });
+        if (player.serverLevel().dimension().location().getNamespace().equals("rougeplanets")) {
+            PlayerDataUtils.subO2(player, 1);
+            if (PlayerDataUtils.getO2(player) <= 0){
+                if (player.isAlive()) {
+                    player.kill();
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onRegisterCommands(RegisterCommandsEvent event) {
+        PartyCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent
@@ -298,16 +312,11 @@ public class RougePlanets {
         if (mc.player == null) return;
         if (!mc.player.isLocalPlayer()) return;
         if (mc.player.level().dimension().location().getPath().contains("planet")) {
-            // Set the text to render
             String text = formatTicksToTime(ClientPlayerData.getO2());
-
-            // Determine the position (bottom-left corner)
-            int x = 5; // 5 pixels from the left
-            int y = mc.getWindow().getGuiScaledHeight() - 15; // 15 pixels from the bottom
-
-            // Draw the text
+            int x = 5;
+            int y = mc.getWindow().getGuiScaledHeight() - 15;
             RenderSystem.enableBlend();
-            guiGraphics.drawString(mc.font, text, x, y, 0xFFFFFF); // White color
+            guiGraphics.drawString(mc.font, text, x, y, 0xFFFFFF);
             RenderSystem.disableBlend();
         }
     }

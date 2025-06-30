@@ -26,11 +26,12 @@ public class LevelRendererMixin {
     @Unique
     private static final ResourceLocation SKYBOX_TEXTURE = new ResourceLocation(RougePlanets.MODID, "textures/environment/skybox.png");
 
-    @Inject(method = "renderSky", at = @At("HEAD"))
+    @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
     private void renderCustomSky(PoseStack poseStack, Matrix4f p_2525534_, float p_202426_, Camera p_202427_, boolean p_202428_, Runnable p_202429_, CallbackInfo ci) {
         if (this.minecraft.level != null) {
             if (this.minecraft.level.dimension().location().getNamespace().equals("rougeplanets")) {
                 renderSky(poseStack);
+                ci.cancel();
             }
         }
     }

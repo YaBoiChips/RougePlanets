@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:overworld",
+  "type": "rougeplanets:miner",
   "generator": {
     "type": "minecraft:noise",
     "settings": "rougeplanets:miner_dimension",

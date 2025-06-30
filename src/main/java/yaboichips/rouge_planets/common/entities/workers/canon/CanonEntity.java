@@ -39,6 +39,7 @@ import yaboichips.rouge_planets.RougePlanets;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.common.containers.PlanetInventoryContainer;
 import yaboichips.rouge_planets.common.containers.SaveableSimpleContainer;
+import yaboichips.rouge_planets.common.world.parties.PartyData;
 import yaboichips.rouge_planets.core.RPEntities;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
@@ -81,16 +82,42 @@ public class CanonEntity extends Entity implements GeoEntity {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (player instanceof ServerPlayer serverPlayer) {
-            if (PlayerDataUtils.getIsInitiated(serverPlayer)) {
-                serverPlayer.startRiding(this);
-                RougePlanets.scheduleTask(27, player::stopRiding);
-                RougePlanets.scheduleTask(30, () -> launchPlayer(serverPlayer, true));
-                RougePlanets.scheduleTask(45, () -> launchPlayer(serverPlayer, false));
-                RougePlanets.scheduleTask(60, () -> teleportToLevel(serverPlayer));
+            PartyData partyData = PartyData.get(serverPlayer.serverLevel());
+            if (partyData.isInParty(serverPlayer.getUUID())) {
+                if (partyData.isLeader(serverPlayer.getUUID())) {
+                    if (PlayerDataUtils.getIsInitiated(serverPlayer)) {
+                        partyData.getParty(serverPlayer.getUUID()).toggleLeaderInDimension();
+                        scheduleLaunch(player);
+                        return InteractionResult.SUCCESS;
+                    }
+                    return InteractionResult.SUCCESS;
+
+                } else if (partyData.getParty(serverPlayer.getUUID()).isLeaderInDimension()) {
+                    if (this.level().dimension() == Level.OVERWORLD) {
+                        player.sendSystemMessage(Component.literal("Party Leader must enter first"));
+                        return InteractionResult.FAIL;
+                    } else {
+                        scheduleLaunch(player);
+                        return InteractionResult.SUCCESS;
+                    }
+                }
+            } else {
+                scheduleLaunch(player);
+                return InteractionResult.SUCCESS;
             }
-            return InteractionResult.SUCCESS;
         }
-        return InteractionResult.FAIL;
+        scheduleLaunch(player);
+        return InteractionResult.SUCCESS;
+    }
+
+    public void scheduleLaunch(Player player) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.startRiding(this);
+            RougePlanets.scheduleTask(27, player::stopRiding);
+            RougePlanets.scheduleTask(30, () -> launchPlayer(serverPlayer, true));
+            RougePlanets.scheduleTask(45, () -> launchPlayer(serverPlayer, false));
+            RougePlanets.scheduleTask(60, () -> teleportToLevel(serverPlayer));
+        }
     }
 
     public void launchPlayer(ServerPlayer serverPlayer, boolean playSound) {
@@ -103,24 +130,32 @@ public class CanonEntity extends Entity implements GeoEntity {
     }
 
     private void teleportToLevel(ServerPlayer serverPlayer) {
+        PartyData partyData = PartyData.get(serverPlayer.serverLevel());
         if (serverPlayer.level().dimension() == Level.OVERWORLD) {
-            ServerLevel world = InfiniverseAPI.get().getOrCreateLevel(serverPlayer.server, ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath(MODID, serverPlayer.getStringUUID() + "planet" + serverPlayer.level().random.nextInt())), () -> getWorldSettings(serverPlayer.serverLevel()));
-            world.getServer().getWorldData().worldGenOptions().seed = random.nextInt();
-            PlayerDataUtils.setSavedInventory(serverPlayer, new SaveableSimpleContainer(serverPlayer.getInventory()));
-            loadInventoryFromCapability(serverPlayer, PlayerDataUtils.getPlanetContainer(serverPlayer));
-            serverPlayer.teleportTo(world, serverPlayer.getX(), 145, serverPlayer.getZ(), 0, 0);
-            serverPlayer.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 120));
+            if (partyData.isInParty(serverPlayer.getUUID()) && !partyData.isLeader(serverPlayer.getUUID())) {
+                PlayerDataUtils.setO2(serverPlayer, 19000);
+                serverPlayer.teleportTo(this.getServer().getPlayerList().getPlayer(partyData.getParty(serverPlayer.getUUID()).leader).serverLevel(), serverPlayer.getX(), 145, serverPlayer.getZ(), 0, 0);
+                serverPlayer.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 120));
+            } else {
+                ServerLevel world = InfiniverseAPI.get().getOrCreateLevel(serverPlayer.server, ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath(MODID, serverPlayer.getStringUUID() + "planet" + serverPlayer.level().random.nextInt())), () -> getWorldSettings(serverPlayer.serverLevel()));
+                world.getServer().getWorldData().worldGenOptions().seed = random.nextInt();
+                PlayerDataUtils.setSavedInventory(serverPlayer, new SaveableSimpleContainer(serverPlayer.getInventory()));
+                loadInventoryFromCapability(serverPlayer, PlayerDataUtils.getPlanetContainer(serverPlayer));
+                PlayerDataUtils.setO2(serverPlayer, 19000);
+                serverPlayer.teleportTo(world, serverPlayer.getX(), 145, serverPlayer.getZ(), 0, 0);
+                serverPlayer.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 120));
 
-            CanonEntity canon = RPEntities.CANON.get().create(world);
-            Vec3 canonPos = new BlockPos(serverPlayer.blockPosition().getX(), 124, serverPlayer.blockPosition().getZ()).getCenter().add(0, -.5, 0);
-            canon.setPos(canonPos);
-            for (int x = serverPlayer.blockPosition().getX() - 1; x <= serverPlayer.blockPosition().getX() + 1; x++) {
-                for (int z = serverPlayer.blockPosition().getZ() - 1; z <= serverPlayer.blockPosition().getZ() + 1; z++) {
-                    BlockPos platformPos = new BlockPos(x, 123, z);
-                    world.setBlockAndUpdate(platformPos, Blocks.SMOOTH_STONE.defaultBlockState());
+                CanonEntity canon = RPEntities.CANON.get().create(world);
+                Vec3 canonPos = new BlockPos(serverPlayer.blockPosition().getX(), 124, serverPlayer.blockPosition().getZ()).getCenter().add(0, -.5, 0);
+                canon.setPos(canonPos);
+                for (int x = serverPlayer.blockPosition().getX() - 1; x <= serverPlayer.blockPosition().getX() + 1; x++) {
+                    for (int z = serverPlayer.blockPosition().getZ() - 1; z <= serverPlayer.blockPosition().getZ() + 1; z++) {
+                        BlockPos platformPos = new BlockPos(x, 123, z);
+                        world.setBlockAndUpdate(platformPos, Blocks.SMOOTH_STONE.defaultBlockState());
+                    }
                 }
+                world.addFreshEntity(canon);
             }
-            world.addFreshEntity(canon);
 
         } else {
             serverPlayer.teleportTo(serverPlayer.getServer().getLevel(Level.OVERWORLD), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 0, 0);
@@ -130,11 +165,12 @@ public class CanonEntity extends Entity implements GeoEntity {
             RougePlanets.scheduleTask(419, () -> checkToAddSlowFalling(serverPlayer));
         }
     }
-    public void checkToAddSlowFalling(ServerPlayer player){
+
+    public void checkToAddSlowFalling(ServerPlayer player) {
         BlockPos playerPos = player.blockPosition();
         BlockPos targetPos = playerPos.below(10);
         ServerLevel world = player.serverLevel();
-        if(world.getBlockState(targetPos).isAir()){
+        if (world.getBlockState(targetPos).isAir()) {
             player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 420));
         }
     }

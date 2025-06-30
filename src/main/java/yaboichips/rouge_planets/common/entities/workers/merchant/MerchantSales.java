@@ -6,25 +6,9 @@ import yaboichips.rouge_planets.core.RPItems;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MerchantSales {
+public record MerchantSales(ItemStack item, int price) {
 
     public static final List<MerchantSales> SALES = new ArrayList<>();
-
-    private final ItemStack item;
-    private final int price;
-
-    public MerchantSales(ItemStack item, int price) {
-        this.item = item;
-        this.price = price;
-    }
-
-    public ItemStack getItem() {
-        return item;
-    }
-
-    public int getPrice() {
-        return price;
-    }
 
     public static final MerchantSales ROPE = register(new MerchantSales(RPItems.ROPE.get().getDefaultInstance(), 5));
     public static final MerchantSales JERKY = register(new MerchantSales(RPItems.JERKY.get().getDefaultInstance(), 3));
@@ -32,8 +16,9 @@ public class MerchantSales {
     public static final MerchantSales MAGAZINE = register(new MerchantSales(RPItems.MAGAZINE.get().getDefaultInstance(), 10));
 
 
-    public static MerchantSales register(MerchantSales sale){
+    public static MerchantSales register(MerchantSales sale) {
         SALES.add(sale);
         return sale;
     }
 }
+

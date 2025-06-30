@@ -77,6 +77,13 @@ public class RougePackets {
                 LayOffPacket::decode,
                 LayOffPacket::handle
         );
+        CHANNEL.registerMessage(
+                packetId++,
+                SellItemPacket.class,
+                SellItemPacket::encode,
+                SellItemPacket::decode,
+                SellItemPacket::handle
+        );
     }
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);

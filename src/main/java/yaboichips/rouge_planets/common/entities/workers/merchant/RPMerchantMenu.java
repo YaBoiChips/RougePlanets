@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.core.RPMenus;
@@ -19,6 +20,8 @@ public class RPMerchantMenu extends AbstractContainerMenu {
     private final SimpleContainer container;
 
     public Player player;
+
+    public Slot sellSlot;
 
     public RPMerchantMenu(int id, Inventory playerInventory, SimpleContainer container, Container armor) {
         super(RPMenus.MERCHANT_MENU.get(), id);
@@ -40,6 +43,8 @@ public class RPMerchantMenu extends AbstractContainerMenu {
         for (int i = 0; i < 4; i++) {
             this.addSlot(new Slot(armor, i, 88 + i * 18, 151));
         }
+        sellSlot = new Slot(new SimpleContainer(1), 0, 160, 58);
+        this.addSlot(sellSlot);
     }
 
     public RPMerchantMenu(int i, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
@@ -69,6 +74,18 @@ public class RPMerchantMenu extends AbstractContainerMenu {
             }
         } else {
             player.sendSystemMessage(Component.literal("You need " + (price - PlayerDataUtils.getCredits((ServerPlayer) player)) + " more Credits"));
+        }
+    }
+
+    public void buyFromPlayer(){
+        for (MerchantBuy buy : MerchantBuy.BUYS){
+            ItemStack stack = sellSlot.getItem();
+            Item item = stack.getItem();
+            if (item == buy.item().getItem()){
+                PlayerDataUtils.addCredits((ServerPlayer)player, buy.price() * stack.getCount());
+                stack.shrink(stack.getCount());
+                break;
+            }
         }
     }
 

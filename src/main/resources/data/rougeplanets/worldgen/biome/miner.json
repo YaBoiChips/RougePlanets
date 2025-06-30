@@ -36,7 +36,9 @@
       "rougeplanets:pyrite_ore",
       "rougeplanets:thallium_ore",
       "rougeplanets:topaz_ore",
-      "rougeplanets:quartzine_ore"
+      "rougeplanets:quartzine_ore",
+      "rougeplanets:beeg_spike",
+      "rougeplanets:angled_arch"
     ]
   ],
   "has_precipitation": true,

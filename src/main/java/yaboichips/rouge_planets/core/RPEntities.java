@@ -24,7 +24,6 @@ public class RPEntities {
     public static final RegistryObject<EntityType<CEO>> CEO = ENTITIES.register("ceo", () -> EntityType.Builder.of(CEO::new, MobCategory.MISC).sized(0.8f, 1.8f).build("ceo"));
     public static final RegistryObject<EntityType<Cyclops>> CYCLOPS = ENTITIES.register("cyclops", () -> EntityType.Builder.of(Cyclops::new, MobCategory.MONSTER).sized(0.8f, 1.8f).build("cyclops"));
     public static final RegistryObject<EntityType<Alien>> ALIEN = ENTITIES.register("alien", () -> EntityType.Builder.of(Alien::new, MobCategory.MONSTER).sized(0.8f, 1.8f).build("alien"));
-
     public static final RegistryObject<EntityType<CanonEntity>> CANON = ENTITIES.register("canon", () -> EntityType.Builder.of(CanonEntity::new, MobCategory.MISC).sized(1, 0.5f).build("canon"));
 
 }

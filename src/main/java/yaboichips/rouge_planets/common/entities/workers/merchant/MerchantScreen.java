@@ -6,21 +6,20 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import yaboichips.rouge_planets.capabilties.player.ClientPlayerData;
-import yaboichips.rouge_planets.capabilties.player.PlayerDataUtils;
 import yaboichips.rouge_planets.network.BuyItemPacket;
 import yaboichips.rouge_planets.network.RougePackets;
+import yaboichips.rouge_planets.network.SellItemPacket;
 
 import static yaboichips.rouge_planets.RougePlanets.MODID;
 
-public class RPMerchantScreen extends AbstractContainerScreen<RPMerchantMenu> {
+public class MerchantScreen extends AbstractContainerScreen<RPMerchantMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(MODID, "textures/gui/merchant.png");
 
     private String credits;
-    public RPMerchantScreen(RPMerchantMenu menu, Inventory inventory, Component title) {
+    public MerchantScreen(RPMerchantMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         this.imageWidth = 256;
         this.imageHeight = 256;
@@ -30,13 +29,15 @@ public class RPMerchantScreen extends AbstractContainerScreen<RPMerchantMenu> {
     protected void init() {
         super.init();
         this.clearWidgets();
+        Button sellButton = Button.builder(Component.literal("Buy Item"), btn -> RougePackets.CHANNEL.sendToServer(new SellItemPacket())).pos(leftPos + 143, topPos + 76).size(50,20).build();
+        this.addRenderableWidget(sellButton);
         for (int i = 0; i < MerchantSales.SALES.size(); i++) {
             MerchantSales sale = MerchantSales.SALES.get(i);
 
             int x = this.leftPos + 6; // Position relative to the screen
             int y = this.topPos + 6 + i * 20; // Stack buttons vertically
 
-            Button button = new CustomItemButton(x, y, 76, 20, sale.getItem(), sale.getPrice(), btn -> RougePackets.CHANNEL.sendToServer(new BuyItemPacket(sale.getItem(), sale.getPrice())));
+            Button button = new CustomItemButton(x, y, 76, 20, sale.item(), sale.price(), btn -> RougePackets.CHANNEL.sendToServer(new BuyItemPacket(sale.item(), sale.price())));
 
             this.addRenderableWidget(button);
         }
@@ -56,12 +57,6 @@ public class RPMerchantScreen extends AbstractContainerScreen<RPMerchantMenu> {
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         graphics.drawString(this.font, Component.literal(ClientPlayerData.getCredits() + "₡"), this.titleLabelX + 215, this.titleLabelY, 4210752, false);
-    }
-
-    @Override
-    protected void containerTick() {
-//        credits = String.valueOf(ClientPlayerData.getCredits());
-        super.containerTick();
     }
 
     private class CustomItemButton extends Button {

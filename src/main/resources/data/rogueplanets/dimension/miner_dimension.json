@@ -1,0 +1,11 @@
+{
+  "type": "rogueplanets:miner",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "rogueplanets:miner_dimension",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "rogueplanets:miner"
+    }
+  }
+}

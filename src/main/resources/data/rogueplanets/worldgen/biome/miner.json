@@ -1,0 +1,63 @@
+{
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon",
+      "minecraft:nether_cave"
+    ]
+  },
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 12638463,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "music": {
+      "max_delay": 24000,
+      "min_delay": 12000,
+      "replace_current_music": false,
+      "sound": "minecraft:music.overworld.dripstone_caves"
+    },
+    "sky_color": 7907327,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "rogueplanets:ruby_ore",
+      "rogueplanets:sapphire_ore",
+      "rogueplanets:amber_ore",
+      "rogueplanets:onyx_ore",
+      "rogueplanets:opal_ore",
+      "rogueplanets:pyrite_ore",
+      "rogueplanets:thallium_ore",
+      "rogueplanets:topaz_ore",
+      "rogueplanets:quartzine_ore",
+      "rogueplanets:beeg_spike",
+      "rogueplanets:angled_arch"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "creature": [
+      {
+        "type": "rogueplanets:cyclops",
+        "weight": 500,
+        "minCount": 1,
+        "maxCount": 4
+      },
+      {
+        "type": "rogueplanets:alien",
+        "weight": 300,
+        "minCount": 1,
+        "maxCount": 4
+      }
+    ]
+  },
+  "temperature": 0.8
+}

@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "yaboichips.rogue_planets.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "rogueplanets.refmap.json",
+  "mixins": [
+    "ServerPlayerMixin"
+  ],
+  "client": [
+    "LevelRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
